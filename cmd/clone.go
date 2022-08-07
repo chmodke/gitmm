@@ -1,0 +1,42 @@
+/*
+Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+
+*/
+package cmd
+
+import (
+	"fmt"
+
+	"gitmm/config"
+	"gitmm/util"
+
+	"github.com/spf13/cobra"
+)
+
+var cloneCmd = &cobra.Command{
+	Use:     "clone",
+	Short:   "批量克隆仓库",
+	Long:    "执行脚本会读取当前目录下repo.yaml配置文件，遍历repos配置项，从origin_group克隆代码到当前目录下work_dir指定的文件夹中。",
+	Example: "gitmm clone -w master_dir -b master",
+	Run: func(cmd *cobra.Command, args []string) {
+
+		workDir, _ := cmd.Flags().GetString("work_dir")
+		workBranch, _ := cmd.Flags().GetString("work_branch")
+		fmt.Printf("work_dir: %s\n", workDir)
+		fmt.Printf("work_branch: %s\n", workBranch)
+
+		fmt.Printf("origin_group: %s\n", config.OriginGroup)
+		fmt.Printf("repos: %s\n", config.Repos)
+		for _, repo := range config.Repos {
+			util.GitClone(config.OriginGroup, repo, workDir, workBranch)
+		}
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(cloneCmd)
+
+	cloneCmd.Flags().StringP("work_dir", "w", "master", "克隆代码的存放路径")
+	cloneCmd.MarkFlagRequired("work_dir")
+	cloneCmd.Flags().StringP("work_branch", "b", "master", "克隆代码的分支")
+}
