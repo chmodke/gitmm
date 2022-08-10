@@ -11,6 +11,8 @@ import (
 	"gitmm/util"
 	"os"
 	"regexp"
+	"strconv"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -40,13 +42,31 @@ func init() {
 	r, _ := regexp.Compile("[0-9]+\\.[0-9]+\\.[0-9]+")
 	ver := r.FindString(out)
 
-	if !compareVersion(ver, "2.28.0") {
+	if !newVersion(ver, "2.28.0") {
 		fmt.Println("git版本低于2.28.0，部分功能不可用。")
 	}
 
 	config.LoadCfg()
 }
 
-func compareVersion(ver1 string, ver2 string) bool {
+func newVersion(ver1 string, ver2 string) bool {
+	vers1 := strings.Split(ver1, ".")
+	vers2 := strings.Split(ver2, ".")
+
+	length := len(vers1)
+	if len(vers2) < length {
+		length = len(vers2)
+	}
+
+	for i := 0; i < length; i++ {
+		v1, _ := strconv.Atoi(vers1[i])
+		v2, _ := strconv.Atoi(vers2[i])
+		if v1 > v2 {
+			return true
+		} else if v1 < v2 {
+			return false
+		}
+	}
+
 	return false
 }
