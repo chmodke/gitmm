@@ -18,6 +18,7 @@ var cloneCmd = &cobra.Command{
 	Long:    "执行脚本会读取当前目录下repo.yaml配置文件，遍历repos配置项，从origin_group克隆代码到当前目录下work_dir指定的文件夹中。",
 	Example: "gitmm clone -w master_dir -b master",
 	Run: func(cmd *cobra.Command, args []string) {
+		config.LoadCfg()
 
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		workBranch, _ := cmd.Flags().GetString("work_branch")

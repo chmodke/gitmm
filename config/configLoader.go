@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"github.com/spf13/viper"
+	"os"
 )
 
 var viperConfig *viper.Viper
@@ -38,8 +39,8 @@ func LoadCfg() {
 	viperConfig, err = Load("repo")
 	if err != nil {
 		fmt.Println(err)
-		fmt.Println("please run gitmm config ")
-		return
+		fmt.Println("可以执行`gitmm config`命令生成示例配置文件。")
+		os.Exit(1)
 	}
 	OriginGroup = viperConfig.GetString("origin_group")
 	MainGroup = viperConfig.GetString("main_group")

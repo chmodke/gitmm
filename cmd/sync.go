@@ -19,6 +19,7 @@ var syncCmd = &cobra.Command{
 注意：会强制以main_group中的内容覆盖origin_group中的内容。`,
 	Example: "gitmm sync",
 	Run: func(cmd *cobra.Command, args []string) {
+		config.LoadCfg()
 		log.Debugf("main_group: %s", config.MainGroup)
 		log.Debugf("origin_group: %s", config.OriginGroup)
 		log.Debugf("repos: %s", config.Repos)

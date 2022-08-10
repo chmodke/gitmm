@@ -6,7 +6,6 @@ package cmd
 
 import (
 	"fmt"
-	"gitmm/config"
 	"gitmm/log"
 	"gitmm/util"
 	"os"
@@ -46,7 +45,6 @@ func init() {
 		fmt.Println("git版本低于2.28.0，部分功能不可用。")
 	}
 
-	config.LoadCfg()
 }
 
 func newVersion(ver1 string, ver2 string) bool {
