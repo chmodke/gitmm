@@ -7,6 +7,7 @@ package cmd
 import (
 	"fmt"
 	"gitmm/config"
+	"gitmm/log"
 	"gitmm/util"
 	"os"
 	"regexp"
@@ -28,6 +29,7 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.Flags().BoolVarP(&log.DEBUG, "debug", "x", false, "debug")
 	command := "git --version"
 	out, ok := util.GetOut(util.Execute(command))
 	if !ok {

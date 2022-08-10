@@ -5,9 +5,8 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-
 	"gitmm/config"
+	"gitmm/log"
 	"gitmm/util"
 
 	"github.com/spf13/cobra"
@@ -22,13 +21,16 @@ var cloneCmd = &cobra.Command{
 
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		workBranch, _ := cmd.Flags().GetString("work_branch")
-		fmt.Printf("work_dir: %s\n", workDir)
-		fmt.Printf("work_branch: %s\n", workBranch)
+		log.Debugf("work_dir: %s", workDir)
+		log.Debugf("work_branch: %s", workBranch)
+		log.Debugf("origin_group: %s", config.OriginGroup)
+		log.Debugf("repos: %s", config.Repos)
 
-		fmt.Printf("origin_group: %s\n", config.OriginGroup)
-		fmt.Printf("repos: %s\n", config.Repos)
 		for _, repo := range config.Repos {
-			util.GitClone(config.OriginGroup, repo, workDir, workBranch)
+			ok := util.GitClone(config.OriginGroup, repo, workDir, workBranch)
+			if ok {
+				log.Infof("clone %s done.", repo)
+			}
 		}
 	},
 }
@@ -39,4 +41,5 @@ func init() {
 	cloneCmd.Flags().StringP("work_dir", "w", "master", "克隆代码的存放路径")
 	cloneCmd.MarkFlagRequired("work_dir")
 	cloneCmd.Flags().StringP("work_branch", "b", "master", "克隆代码的分支")
+	cloneCmd.Flags().BoolVarP(&log.DEBUG, "debug", "x", false, "debug")
 }

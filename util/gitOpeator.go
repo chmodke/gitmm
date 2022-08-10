@@ -7,15 +7,15 @@ import (
 	"strings"
 )
 
-func GitClone(originGroup string, repo string, workDir string, workBranch string) {
+func GitClone(originGroup string, repo string, workDir string, workBranch string) bool {
 	pwd, _ := os.Getwd()
 	remoteAddr := fmt.Sprintf("%s/%s.git", originGroup, repo)
 	localDir := filepath.Join(pwd, workDir, repo)
 	command := fmt.Sprintf("git clone -b %s -- %s %s", workBranch, remoteAddr, localDir)
-	Out(Execute(command))
+	return Out(Execute(command))
 }
 
-func GitSync(mainGroup string, originGroup string, repo string, workDir string) {
+func GitSync(mainGroup string, originGroup string, repo string, workDir string) bool {
 	pwd, _ := os.Getwd()
 	mainRemote := fmt.Sprintf("%s/%s.git", mainGroup, repo)
 	originRemote := fmt.Sprintf("%s/%s.git", originGroup, repo)
@@ -38,7 +38,7 @@ func GitSync(mainGroup string, originGroup string, repo string, workDir string) 
 	out, ret = GetOut(Execute(command))
 
 	if !ret {
-		return
+		return ret
 	}
 	for _, s := range strings.Split(out, "\n") {
 		branchName, ok := getBranchName(s)
@@ -59,6 +59,7 @@ func GitSync(mainGroup string, originGroup string, repo string, workDir string) 
 
 	command = fmt.Sprintf("git -C %s push origin --tags -f", localDir)
 	ret = Out(Execute(command))
+	return ret
 }
 
 /*

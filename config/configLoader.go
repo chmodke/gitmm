@@ -2,8 +2,6 @@ package config
 
 import (
 	"fmt"
-	"os"
-
 	"github.com/spf13/viper"
 )
 
@@ -40,9 +38,19 @@ func LoadCfg() {
 	viperConfig, err = Load("repo")
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+		fmt.Println("please run gitmm config ")
+		return
 	}
 	OriginGroup = viperConfig.GetString("origin_group")
 	MainGroup = viperConfig.GetString("main_group")
 	Repos = viperConfig.GetStringSlice("repos")
+}
+
+func WriteCfg() {
+	sample := viper.New()
+	sample.Set("main_group", "git@gitee.com:chmodke")
+	sample.Set("origin_group", "ssh://git@192.168.100.100:2222/chmodke")
+	sample.Set("repos", []string{"arpc", "ftrans"})
+
+	sample.WriteConfigAs("repo_sample.yaml")
 }

@@ -2,13 +2,13 @@ package util
 
 import (
 	"bytes"
-	"fmt"
+	"gitmm/log"
 	"os/exec"
 	"runtime"
 )
 
 func Execute(command string) (outStr string, errStr string, err error) {
-	fmt.Printf("command: %s\n", command)
+	log.Debugf("command: %s", command)
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
 		cmd = exec.Command("cmd.exe", "/c", command)
@@ -26,23 +26,23 @@ func Execute(command string) (outStr string, errStr string, err error) {
 
 func Out(stdout string, stderr string, err error) bool {
 	if err != nil {
-		fmt.Println("execute fail")
-		fmt.Println(stderr)
+		log.Error("execute fail")
+		log.Error(stderr)
 		return false
 	} else {
-		fmt.Println("execute succeed")
-		fmt.Println(stdout)
+		log.Debug("execute succeed")
+		log.Debug(stdout)
 		return true
 	}
 }
 
 func GetOut(stdout string, stderr string, err error) (string, bool) {
 	if err != nil {
-		fmt.Println("execute fail")
-		fmt.Println(stderr)
+		log.Error("execute fail")
+		log.Error(stderr)
 		return "", false
 	} else {
-		fmt.Println("execute succeed")
+		log.Debug("execute succeed")
 		return stdout, true
 	}
 }

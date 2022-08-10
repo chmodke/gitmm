@@ -5,9 +5,9 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"gitmm/config"
+	"gitmm/log"
 	"gitmm/util"
 	"os"
 )
@@ -19,11 +19,14 @@ var syncCmd = &cobra.Command{
 注意：会强制以main_group中的内容覆盖origin_group中的内容。`,
 	Example: "gitmm sync",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("main_group: %s\n", config.MainGroup)
-		fmt.Printf("origin_group: %s\n", config.OriginGroup)
-		fmt.Printf("repos: %s\n", config.Repos)
+		log.Debugf("main_group: %s", config.MainGroup)
+		log.Debugf("origin_group: %s", config.OriginGroup)
+		log.Debugf("repos: %s", config.Repos)
 		for _, repo := range config.Repos {
-			util.GitSync(config.MainGroup, config.OriginGroup, repo, "tmp")
+			ok := util.GitSync(config.MainGroup, config.OriginGroup, repo, "tmp")
+			if ok {
+				log.Infof("sync %s done.", repo)
+			}
 		}
 		os.RemoveAll("tmp")
 	},
@@ -31,4 +34,5 @@ var syncCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(syncCmd)
+	syncCmd.Flags().BoolVarP(&log.DEBUG, "debug", "x", false, "debug")
 }
