@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"gitmm/log"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -153,5 +154,19 @@ func GitPull(localRepo string, force bool) bool {
 	}
 	command = fmt.Sprintf("git -C %s pull --all -v", localRepo)
 	ret = Out(Execute(command))
+	return ret
+}
+
+func GitRemote(localRepo string) bool {
+	var command string
+
+	command = fmt.Sprintf("git -C %s remote -v", localRepo)
+	out, ret := GetOut(Execute(command))
+	log.Info(out)
+
+	command = fmt.Sprintf("git -C %s symbolic-ref --short HEAD", localRepo)
+	branch, ret := GetOut(Execute(command))
+	log.Infof("current branch %s", branch)
+
 	return ret
 }
