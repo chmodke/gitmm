@@ -5,6 +5,7 @@ import (
 	"gitmm/log"
 	"os/exec"
 	"runtime"
+	"strings"
 )
 
 func Execute(command string) (outStr string, errStr string, err error) {
@@ -20,7 +21,7 @@ func Execute(command string) (outStr string, errStr string, err error) {
 	cmd.Stderr = &stderr
 
 	err = cmd.Run()
-	outStr, errStr = stdout.String(), stderr.String()
+	outStr, errStr = strings.Trim(stdout.String(), "\n"), strings.Trim(stderr.String(), "\n")
 	return
 }
 

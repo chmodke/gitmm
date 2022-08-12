@@ -1,7 +1,4 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
+// Package cmd /*
 package cmd
 
 import (
@@ -10,6 +7,7 @@ import (
 	"gitmm/log"
 	"gitmm/util"
 	"os"
+	"strings"
 )
 
 var syncCmd = &cobra.Command{
@@ -24,10 +22,14 @@ var syncCmd = &cobra.Command{
 		log.Debugf("origin_group: %s", config.OriginGroup)
 		log.Debugf("repos: %s", config.Repos)
 		for _, repo := range config.Repos {
+			log.Infof("sync %s start.", repo)
 			ok := util.GitSync(config.MainGroup, config.OriginGroup, repo, "tmp")
 			if ok {
 				log.Infof("sync %s done.", repo)
+			} else {
+				log.Infof("sync %s fail.", repo)
 			}
+			log.Info(strings.Repeat("-", 80))
 		}
 		os.RemoveAll("tmp")
 	},
@@ -35,5 +37,4 @@ var syncCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(syncCmd)
-	syncCmd.Flags().BoolVarP(&log.DEBUG, "debug", "x", false, "debug")
 }

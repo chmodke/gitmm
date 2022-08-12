@@ -53,22 +53,35 @@ func GitSync(mainGroup string, originGroup string, repo string, workDir string) 
 	var command string
 	var ret bool
 
+	log.Info("1.1 init local repo.")
 	command = fmt.Sprintf("git init -b %s %s", "master", localDir)
 	ret = Out(Execute(command))
+	if !ret {
+		return ret
+	}
 
+	log.Info("2.1 add main fetch url.")
 	command = fmt.Sprintf("git -C %s remote add main %s", localDir, mainRemote)
 	ret = Out(Execute(command))
+	if !ret {
+		return ret
+	}
 
+	log.Info("2.2 fetch main all.")
 	command = fmt.Sprintf("git -C %s fetch --all --prune --tags", localDir)
 	ret = Out(Execute(command))
+	if !ret {
+		return ret
+	}
 
 	command = fmt.Sprintf("git -C %s branch -r", localDir)
 	var out string
 	out, ret = GetOut(Execute(command))
-
 	if !ret {
 		return ret
 	}
+
+	log.Info("2.3 track all branch.")
 	for _, s := range strings.Split(out, "\n") {
 		branchName, ok := getBranchName(s)
 		if ok {
@@ -77,14 +90,26 @@ func GitSync(mainGroup string, originGroup string, repo string, workDir string) 
 		}
 	}
 
+	log.Info("2.4 remove main fetch url.")
 	command = fmt.Sprintf("git -C %s remote remove main", localDir)
 	ret = Out(Execute(command))
+	if !ret {
+		return ret
+	}
 
+	log.Info("3.1 add origin url.")
 	command = fmt.Sprintf("git -C %s remote add origin %s", localDir, originRemote)
 	ret = Out(Execute(command))
+	if !ret {
+		return ret
+	}
 
+	log.Info("3.2 push origin all.")
 	command = fmt.Sprintf("git -C %s push origin --all -f", localDir)
 	ret = Out(Execute(command))
+	if !ret {
+		return ret
+	}
 
 	command = fmt.Sprintf("git -C %s push origin --tags -f", localDir)
 	ret = Out(Execute(command))
@@ -168,5 +193,51 @@ func GitRemote(localRepo string) bool {
 	branch, ret := GetOut(Execute(command))
 	log.Infof("current branch %s", branch)
 
+	return ret
+}
+
+func GitCreateBranch(localRepo, newBranch, startPoint string) bool {
+	var command string
+
+	command = fmt.Sprintf("git -C %s branch %s %s", localRepo, newBranch, startPoint)
+	ret := Out(Execute(command))
+
+	command = fmt.Sprintf("git -C %s symbolic-ref --short HEAD", localRepo)
+	branch, ret := GetOut(Execute(command))
+	log.Infof("current branch %s", branch)
+	return ret
+}
+
+func GitSwitchBranch(localRepo, aimBranch string, force bool) bool {
+	var command string
+
+	command = fmt.Sprintf("git -C %s symbolic-ref --short HEAD", localRepo)
+	curBranch, ret := GetOut(Execute(command))
+	log.Infof("current branch %s", curBranch)
+
+	if force {
+		command = fmt.Sprintf("git -C %s clean -df", localRepo)
+		ret = Out(Execute(command))
+		command = fmt.Sprintf("git -C %s reset --hard", localRepo)
+		ret = Out(Execute(command))
+		command = fmt.Sprintf("git -C %s fetch --all", localRepo)
+		ret = Out(Execute(command))
+	}
+
+	command = fmt.Sprintf("git -C %s checkout %s", localRepo, aimBranch)
+	ret = Out(Execute(command))
+
+	command = fmt.Sprintf("git -C %s symbolic-ref --short HEAD", localRepo)
+	curBranch, ret = GetOut(Execute(command))
+	log.Infof("current branch %s", curBranch)
+	return ret
+}
+
+func GitCommand(localRepo, gitCommand string) bool {
+	var command string
+
+	command = fmt.Sprintf("git -C %s %s", localRepo, gitCommand)
+	out, ret := GetOut(Execute(command))
+	fmt.Println(out)
 	return ret
 }

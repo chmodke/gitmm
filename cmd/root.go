@@ -1,7 +1,4 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
+// Package cmd /*
 package cmd
 
 import (
@@ -18,8 +15,8 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "gitmm",
-	Short: "git 多仓库管理工具",
-	Long:  "一个git多仓库管理工具，通过简单的配置就可以批量管理多个仓库。",
+	Short: "git多仓库管理工具",
+	Long:  "git多仓库管理工具，通过简单的配置对仓库进行批量管理。",
 }
 
 func Execute() {
@@ -30,7 +27,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().BoolVarP(&log.DEBUG, "debug", "x", false, "debug")
+	rootCmd.PersistentFlags().BoolVarP(&log.DEBUG, "debug", "x", false, "debug")
 	command := "git --version"
 	out, ok := util.GetOut(util.Execute(command))
 	if !ok {

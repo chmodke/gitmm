@@ -16,7 +16,7 @@ var (
 
 func Load(configName string) (*viper.Viper, error) {
 	if configName == "" {
-		return nil, fmt.Errorf("config directory is empty")
+		return nil, fmt.Errorf("config name is empty")
 	}
 	viper.SetConfigName(configName)
 	viper.SetConfigType("yaml")
@@ -24,7 +24,7 @@ func Load(configName string) (*viper.Viper, error) {
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			return nil, fmt.Errorf("config file %s not found", configName)
+			return nil, fmt.Errorf("config file %s.%s not found", configName, "yaml")
 		} else {
 			return nil, err
 		}

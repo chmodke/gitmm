@@ -1,7 +1,4 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
+// Package cmd /*
 package cmd
 
 import (
@@ -9,13 +6,15 @@ import (
 	"gitmm/log"
 	"gitmm/util"
 	"path/filepath"
+	"strings"
 )
 
-// remoteCmd represents the pull command
+// remoteCmd represents the remote command
 var remoteCmd = &cobra.Command{
-	Use:   "remote",
-	Short: "批量查看仓库远程信息",
-	Long:  `执行脚本会遍历work_dir目录下中的git仓库，并查看仓库远程信息。`,
+	Use:     "remote",
+	Short:   "批量查看仓库远程信息",
+	Long:    `执行脚本会遍历work_dir目录下中的git仓库，并查看仓库远程信息。`,
+	Example: "gitmm remote -w tmp",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		log.Debugf("work_dir: %s", workDir)
@@ -29,7 +28,10 @@ var remoteCmd = &cobra.Command{
 			ok := util.GitRemote(filepath.Join(localDir, repo))
 			if ok {
 				log.Infof("show remote %s done.", repo)
+			} else {
+				log.Infof("show remote %s fail.", repo)
 			}
+			log.Info(strings.Repeat("-", 80))
 		}
 	},
 }
@@ -37,7 +39,6 @@ var remoteCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(remoteCmd)
 
-	remoteCmd.Flags().BoolVarP(&log.DEBUG, "debug", "x", false, "debug")
-	remoteCmd.Flags().StringP("work_dir", "w", "master", "克隆代码的存放路径")
+	remoteCmd.Flags().StringP("work_dir", "w", "master", "本地代码的存放路径")
 	remoteCmd.MarkFlagRequired("work_dir")
 }
