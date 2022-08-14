@@ -17,6 +17,10 @@ var rootCmd = &cobra.Command{
 	Use:   "gitmm",
 	Short: "git多仓库管理工具",
 	Long:  "git多仓库管理工具，通过简单的配置对仓库进行批量管理。",
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		level, _ := cmd.Flags().GetString("debug")
+		log.SetLevel(level)
+	},
 }
 
 func Execute() {
@@ -27,7 +31,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().BoolVarP(&log.DEBUG, "debug", "x", false, "debug")
+	rootCmd.PersistentFlags().StringP("debug", "x", "info", "show more detail.")
 	command := "git --version"
 	out, ok := util.GetOut(util.Execute(command))
 	if !ok {
