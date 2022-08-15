@@ -21,7 +21,11 @@ var pullCmd = &cobra.Command{
 		log.Debugf("work_dir: %s", workDir)
 		log.Debugf("force: %s", force)
 
-		localDir := util.GetWorkDir(workDir)
+		localDir, err := util.GetWorkDir(workDir)
+		if err != nil {
+			log.Error("获取工作路径失败")
+			return
+		}
 		repos, err := util.FindGit(localDir)
 		if err != nil {
 			log.Error("获取本地仓库失败")

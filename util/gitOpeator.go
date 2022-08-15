@@ -10,21 +10,27 @@ import (
 	"strings"
 )
 
-func GetWorkDir(workDir string) string {
+func GetWorkDir(workDir string) (string, error) {
 	var localDir string
 	if filepath.IsAbs(workDir) {
 		localDir = workDir
 	} else {
-		pwd, _ := os.Getwd()
+		pwd, err := os.Getwd()
+		if err != nil {
+			return "", err
+		}
 		localDir = filepath.Join(pwd, workDir)
 	}
 
 	if PathExists(localDir) {
-		return localDir
+		return localDir, nil
 	}
 
-	os.MkdirAll(localDir, fs.ModeDir)
-	return localDir
+	err := os.MkdirAll(localDir, fs.ModeDir)
+	if err != nil {
+		return "", err
+	}
+	return localDir, nil
 }
 
 func PathExists(path string) bool {
@@ -39,7 +45,11 @@ func PathExists(path string) bool {
 }
 
 func GitClone(originGroup string, repo string, workDir string, workBranch string) bool {
-	localDir := filepath.Join(GetWorkDir(workDir), repo)
+	workPath, err := GetWorkDir(workDir)
+	if err != nil {
+		return false
+	}
+	localDir := filepath.Join(workPath, repo)
 	remoteAddr := fmt.Sprintf("%s/%s.git", originGroup, repo)
 	command := fmt.Sprintf("git clone -b %s -- %s %s", workBranch, remoteAddr, localDir)
 	return Out(Execute(command))
@@ -48,7 +58,12 @@ func GitClone(originGroup string, repo string, workDir string, workBranch string
 func GitSync(mainGroup string, originGroup string, repo string, workDir string) bool {
 	mainRemote := fmt.Sprintf("%s/%s.git", mainGroup, repo)
 	originRemote := fmt.Sprintf("%s/%s.git", originGroup, repo)
-	localDir := filepath.Join(GetWorkDir(workDir), repo)
+
+	workPath, err := GetWorkDir(workDir)
+	if err != nil {
+		return false
+	}
+	localDir := filepath.Join(workPath, repo)
 
 	var command string
 	var ret bool

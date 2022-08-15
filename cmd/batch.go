@@ -29,7 +29,12 @@ var batchCmd = &cobra.Command{
 		gitCommand = strings.TrimLeft(gitCommand, "git ")
 		log.Debugf("git command: %s", gitCommand)
 
-		localDir := util.GetWorkDir(workDir)
+		localDir, err := util.GetWorkDir(workDir)
+		if err != nil {
+			log.Error("获取工作路径失败")
+			return nil
+		}
+
 		repos, err := util.FindGit(localDir)
 		if err != nil {
 			log.Error("获取本地仓库失败")

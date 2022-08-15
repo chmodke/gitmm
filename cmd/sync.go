@@ -8,7 +8,6 @@ import (
 	"gitmm/log"
 	"gitmm/util"
 	"os"
-	"strings"
 )
 
 var syncCmd = &cobra.Command{
@@ -30,7 +29,6 @@ var syncCmd = &cobra.Command{
 			} else {
 				log.Error(util.Title(fmt.Sprintf("sync %s fail.", repo), 80, "-"))
 			}
-			log.Info(strings.Repeat("-", 80))
 		}
 		os.RemoveAll("tmp")
 	},
