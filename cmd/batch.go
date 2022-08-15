@@ -3,6 +3,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"gitmm/log"
 	"gitmm/util"
 	"path/filepath"
@@ -35,13 +36,13 @@ var batchCmd = &cobra.Command{
 		}
 
 		for _, repo := range repos {
+			log.Info(util.Title(fmt.Sprintf("start execute command at %s.", repo), 80, "-"))
 			ok := util.GitCommand(filepath.Join(localDir, repo), gitCommand)
 			if ok {
-				log.Infof("execute command %s done.", repo)
+				log.Info(util.Title(fmt.Sprintf("execute command %s done.", repo), 80, "-"))
 			} else {
-				log.Infof("execute command %s fail.", repo)
+				log.Error(util.Title(fmt.Sprintf("execute command %s fail.", repo), 80, "-"))
 			}
-			log.Info(strings.Repeat("-", 80))
 		}
 		return nil
 	},

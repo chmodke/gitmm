@@ -2,11 +2,11 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 	"gitmm/log"
 	"gitmm/util"
 	"path/filepath"
-	"strings"
 )
 
 // pullCmd represents the pull command
@@ -27,13 +27,13 @@ var pullCmd = &cobra.Command{
 			log.Error("获取本地仓库失败")
 		}
 		for _, repo := range repos {
+			log.Info(util.Title(fmt.Sprintf("start pull %s.", repo), 80, "-"))
 			ok := util.GitPull(filepath.Join(localDir, repo), force)
 			if ok {
-				log.Infof("pull %s done.", repo)
+				log.Info(util.Title(fmt.Sprintf("pull %s done.", repo), 80, "-"))
 			} else {
-				log.Infof("pull %s fail.", repo)
+				log.Error(util.Title(fmt.Sprintf("pull %s fail.", repo), 80, "-"))
 			}
-			log.Info(strings.Repeat("-", 80))
 		}
 	},
 }

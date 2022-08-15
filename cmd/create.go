@@ -2,12 +2,11 @@
 package cmd
 
 import (
+	"fmt"
+	"github.com/spf13/cobra"
 	"gitmm/log"
 	"gitmm/util"
 	"path/filepath"
-	"strings"
-
-	"github.com/spf13/cobra"
 )
 
 // createCmd represents the create command
@@ -30,13 +29,13 @@ var createCmd = &cobra.Command{
 			log.Error("获取本地仓库失败")
 		}
 		for _, repo := range repos {
+			log.Info(util.Title(fmt.Sprintf("start create branch at %s.", repo), 80, "-"))
 			ok := util.GitCreateBranch(filepath.Join(localDir, repo), newBranch, startPoint)
 			if ok {
-				log.Infof("%s create branch done.", repo)
+				log.Info(util.Title(fmt.Sprintf("%s create branch done.", repo), 80, "-"))
 			} else {
-				log.Infof("%s create branch fail.", repo)
+				log.Error(util.Title(fmt.Sprintf("%s create branch fail.", repo), 80, "-"))
 			}
-			log.Info(strings.Repeat("-", 80))
 		}
 	},
 }

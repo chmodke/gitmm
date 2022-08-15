@@ -187,7 +187,7 @@ func GitRemote(localRepo string) bool {
 
 	command = fmt.Sprintf("git -C %s remote -v", localRepo)
 	out, ret := GetOut(Execute(command))
-	log.Info(out)
+	log.InfoO(out)
 
 	command = fmt.Sprintf("git -C %s symbolic-ref --short HEAD", localRepo)
 	branch, ret := GetOut(Execute(command))
@@ -238,6 +238,6 @@ func GitCommand(localRepo, gitCommand string) bool {
 
 	command = fmt.Sprintf("git -C %s %s", localRepo, gitCommand)
 	out, ret := GetOut(Execute(command))
-	fmt.Println(out)
+	log.InfoO(out)
 	return ret
 }

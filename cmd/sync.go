@@ -2,6 +2,7 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 	"gitmm/config"
 	"gitmm/log"
@@ -22,12 +23,12 @@ var syncCmd = &cobra.Command{
 		log.Debugf("origin_group: %s", config.OriginGroup)
 		log.Debugf("repos: %s", config.Repos)
 		for _, repo := range config.Repos {
-			log.Infof("sync %s start.", repo)
+			log.Info(util.Title(fmt.Sprintf("start %s sync.", repo), 80, "-"))
 			ok := util.GitSync(config.MainGroup, config.OriginGroup, repo, "tmp")
 			if ok {
-				log.Infof("sync %s done.", repo)
+				log.Info(util.Title(fmt.Sprintf("sync %s done.", repo), 80, "-"))
 			} else {
-				log.Infof("sync %s fail.", repo)
+				log.Error(util.Title(fmt.Sprintf("sync %s fail.", repo), 80, "-"))
 			}
 			log.Info(strings.Repeat("-", 80))
 		}

@@ -2,6 +2,7 @@
 package cmd
 
 import (
+	"fmt"
 	"gitmm/log"
 	"gitmm/util"
 	"path/filepath"
@@ -30,11 +31,12 @@ var switchCmd = &cobra.Command{
 			log.Error("获取本地仓库失败")
 		}
 		for _, repo := range repos {
+			log.Info(util.Title(fmt.Sprintf("start switch %s branch.", repo), 80, "-"))
 			ok := util.GitSwitchBranch(filepath.Join(localDir, repo), branch, force)
 			if ok {
-				log.Infof("%s switch branch done.", repo)
+				log.Info(util.Title(fmt.Sprintf("%s switch branch done.", repo), 80, "-"))
 			} else {
-				log.Infof("%s switch branch fail.", repo)
+				log.Error(util.Title(fmt.Sprintf("%s switch branch fail.", repo), 80, "-"))
 			}
 			log.Info(strings.Repeat("-", 80))
 		}

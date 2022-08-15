@@ -2,11 +2,11 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 	"gitmm/log"
 	"gitmm/util"
 	"path/filepath"
-	"strings"
 )
 
 // remoteCmd represents the remote command
@@ -25,13 +25,13 @@ var remoteCmd = &cobra.Command{
 			log.Error("获取本地仓库失败")
 		}
 		for _, repo := range repos {
+			log.Info(util.Title(fmt.Sprintf("get %s remote info.", repo), 80, "-"))
 			ok := util.GitRemote(filepath.Join(localDir, repo))
 			if ok {
-				log.Infof("show remote %s done.", repo)
+				log.Info(util.Title(fmt.Sprintf("show remote %s done.", repo), 80, "-"))
 			} else {
-				log.Infof("show remote %s fail.", repo)
+				log.Error(util.Title(fmt.Sprintf("show remote %s fail.", repo), 80, "-"))
 			}
-			log.Info(strings.Repeat("-", 80))
 		}
 	},
 }

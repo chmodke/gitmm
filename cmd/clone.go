@@ -2,12 +2,11 @@
 package cmd
 
 import (
+	"fmt"
+	"github.com/spf13/cobra"
 	"gitmm/config"
 	"gitmm/log"
 	"gitmm/util"
-	"strings"
-
-	"github.com/spf13/cobra"
 )
 
 var cloneCmd = &cobra.Command{
@@ -26,13 +25,13 @@ var cloneCmd = &cobra.Command{
 		log.Debugf("repos: %s", config.Repos)
 
 		for _, repo := range config.Repos {
+			log.Info(util.Title(fmt.Sprintf("start clone %s.", repo), 80, "-"))
 			ok := util.GitClone(config.OriginGroup, repo, workDir, workBranch)
 			if ok {
-				log.Infof("clone %s done.", repo)
+				log.Info(util.Title(fmt.Sprintf("clone %s done.", repo), 80, "-"))
 			} else {
-				log.Infof("clone %s fail.", repo)
+				log.Error(util.Title(fmt.Sprintf("clone %s fail.", repo), 80, "-"))
 			}
-			log.Info(strings.Repeat("-", 80))
 		}
 	},
 }

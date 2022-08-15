@@ -12,11 +12,12 @@ var logLevelMap = make(map[int8]string)
 var logNameMap = make(map[string]int8)
 
 const (
-	GlobalFmt      = "%s %5s %s\n"
-	DEBUG     int8 = 1
-	INFO      int8 = 3
-	WARN      int8 = 5
-	ERROR     int8 = 7
+	GlobalFmt       = "%s %5s %s\n"
+	DateFormat      = "2006-01-02 15:04:05.000"
+	DEBUG      int8 = 1
+	INFO       int8 = 3
+	WARN       int8 = 5
+	ERROR      int8 = 7
 )
 
 func init() {
@@ -55,6 +56,18 @@ func Debugf(template string, args ...interface{}) {
 	}
 }
 
+func DebugO(msg string) {
+	if level <= DEBUG {
+		out(msg)
+	}
+}
+
+func DebugOf(template string, args ...interface{}) {
+	if level <= DEBUG {
+		out(fmt.Sprintf(template, args))
+	}
+}
+
 func Info(msg string) {
 	if level <= INFO {
 		write(INFO, msg)
@@ -63,6 +76,18 @@ func Info(msg string) {
 func Infof(template string, args ...interface{}) {
 	if level <= INFO {
 		write(INFO, fmt.Sprintf(template, args))
+	}
+}
+
+func InfoO(msg string) {
+	if level <= INFO {
+		out(msg)
+	}
+}
+
+func InfoOf(template string, args ...interface{}) {
+	if level <= INFO {
+		out(fmt.Sprintf(template, args))
 	}
 }
 
@@ -77,6 +102,18 @@ func Warnf(template string, args ...interface{}) {
 	}
 }
 
+func WarnO(msg string) {
+	if level <= WARN {
+		out(msg)
+	}
+}
+
+func WarnOf(template string, args ...interface{}) {
+	if level <= WARN {
+		out(fmt.Sprintf(template, args))
+	}
+}
+
 func Error(msg string) {
 	if level <= ERROR {
 		write(ERROR, msg)
@@ -88,10 +125,22 @@ func Errorf(template string, args ...interface{}) {
 	}
 }
 
-func write(level int8, msg string) {
-	fmt.Printf(GlobalFmt, time.Now().Format("2006-01-02 15:04:05.000"), logLevelMap[level], msg)
+func ErrorO(msg string) {
+	if level <= ERROR {
+		out(msg)
+	}
 }
 
-func Out(msg string) {
+func ErrorOf(template string, args ...interface{}) {
+	if level <= ERROR {
+		out(fmt.Sprintf(template, args))
+	}
+}
+
+func write(level int8, msg string) {
+	fmt.Printf(GlobalFmt, time.Now().Format(DateFormat), logLevelMap[level], msg)
+}
+
+func out(msg string) {
 	fmt.Println(msg)
 }
