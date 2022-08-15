@@ -51,6 +51,5 @@ var batchCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(batchCmd)
 
-	batchCmd.Flags().StringP("work_dir", "w", "master", "本地代码的存放路径")
-	batchCmd.MarkFlagRequired("work_dir")
+	batchCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
 }

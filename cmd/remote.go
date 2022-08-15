@@ -39,6 +39,5 @@ var remoteCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(remoteCmd)
 
-	remoteCmd.Flags().StringP("work_dir", "w", "master", "本地代码的存放路径")
-	remoteCmd.MarkFlagRequired("work_dir")
+	remoteCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
 }

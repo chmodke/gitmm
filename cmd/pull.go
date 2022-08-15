@@ -41,7 +41,6 @@ var pullCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(pullCmd)
 
-	pullCmd.Flags().StringP("work_dir", "w", "master", "本地代码的存放路径")
-	pullCmd.MarkFlagRequired("work_dir")
+	pullCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
 	pullCmd.Flags().BoolP("force", "f", false, "强制拉取")
 }

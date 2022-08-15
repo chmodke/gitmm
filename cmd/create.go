@@ -43,8 +43,7 @@ var createCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(createCmd)
 
-	createCmd.Flags().StringP("work_dir", "w", "master", "本地代码的存放路径")
-	createCmd.MarkFlagRequired("work_dir")
+	createCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
 	createCmd.Flags().StringP("new_branch", "b", "master", "新分支名称")
 	createCmd.MarkFlagRequired("new_branch")
 	createCmd.Flags().StringP("refs", "r", "HEAD", "新分支起点")

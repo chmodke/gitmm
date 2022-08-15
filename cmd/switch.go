@@ -46,8 +46,7 @@ var switchCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(switchCmd)
 
-	switchCmd.Flags().StringP("work_dir", "w", "master", "本地代码的存放路径")
-	switchCmd.MarkFlagRequired("work_dir")
+	switchCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
 	switchCmd.Flags().StringP("branch", "b", "master", "目标分支/tag/commit")
 	switchCmd.MarkFlagRequired("branch")
 	switchCmd.Flags().BoolP("force", "f", false, "强制切换")
