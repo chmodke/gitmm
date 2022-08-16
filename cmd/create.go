@@ -13,7 +13,7 @@ import (
 var createCmd = &cobra.Command{
 	Use:     "create",
 	Short:   "批量创建分支",
-	Long:    `执行脚本会遍历work_dir中的git仓库，并执行分支创建操作。`,
+	Long:    `执行命令会遍历work_dir中的git仓库，并执行分支创建操作。`,
 	Example: "git create -w tmp -b develop",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")

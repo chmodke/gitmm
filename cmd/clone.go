@@ -12,7 +12,7 @@ import (
 var cloneCmd = &cobra.Command{
 	Use:     "clone",
 	Short:   "批量克隆仓库",
-	Long:    "执行脚本会读取当前目录下repo.yaml配置文件，遍历repos配置项，从origin_group克隆代码到当前目录下work_dir指定的文件夹中。",
+	Long:    "执行命令会读取当前目录下repo.yaml配置文件，遍历repos配置项，从origin_group克隆代码到当前目录下work_dir指定的文件夹中。",
 	Example: "gitmm clone -w tmp -b master",
 	Run: func(cmd *cobra.Command, args []string) {
 		config.LoadCfg()

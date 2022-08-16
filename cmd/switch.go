@@ -15,7 +15,7 @@ import (
 var switchCmd = &cobra.Command{
 	Use:     "switch",
 	Short:   "批量切换分支",
-	Long:    `执行脚本会遍历work_dir中的git仓库，并执行分支切换操作。`,
+	Long:    `执行命令会遍历work_dir中的git仓库，并执行分支切换操作。`,
 	Example: "gitmm switch -w tmp -b develop",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")

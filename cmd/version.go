@@ -14,7 +14,7 @@ var versionCmd = &cobra.Command{
 	Long:    `Show tool version`,
 	Example: "gitmm version",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("gitmm 1.0.0")
+		fmt.Println("gitmm 1.0.1")
 	},
 }
 

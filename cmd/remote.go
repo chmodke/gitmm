@@ -13,7 +13,7 @@ import (
 var remoteCmd = &cobra.Command{
 	Use:     "remote",
 	Short:   "批量查看仓库远程信息",
-	Long:    `执行脚本会遍历work_dir目录下中的git仓库，并查看仓库远程信息。`,
+	Long:    `执行命令会遍历work_dir目录下中的git仓库，并查看仓库远程信息。`,
 	Example: "gitmm remote -w tmp",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")

@@ -13,7 +13,7 @@ import (
 var pullCmd = &cobra.Command{
 	Use:     "pull",
 	Short:   "批量拉取仓库",
-	Long:    `执行脚本会遍历work_dir目录下中的git仓库，并执行分支拉取操作。`,
+	Long:    `执行命令会遍历work_dir目录下中的git仓库，并执行分支拉取操作。`,
 	Example: "gitmm pull -w tmp",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")

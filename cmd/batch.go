@@ -16,7 +16,7 @@ import (
 var batchCmd = &cobra.Command{
 	Use:     "batch",
 	Short:   "批量执行提供的git命令",
-	Long:    `执行脚本会遍历work_dir中的git仓库，并执行提供的git命令。`,
+	Long:    `执行命令会遍历work_dir中的git仓库，并执行提供的git命令。`,
 	Example: "gitmm batch -w tmp 'log --oneline -n1'",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
