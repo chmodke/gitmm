@@ -31,6 +31,8 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.Version = VERSION
+	rootCmd.Flags().BoolP("version", "v", false, "show tool version.")
 	rootCmd.PersistentFlags().StringP("debug", "x", "info", "show more detail.")
 	command := "git --version"
 	out, ok := util.GetOut(util.Execute(command))
