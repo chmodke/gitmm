@@ -93,21 +93,26 @@ repos:
 
 > 生成示例配置文件
 
-用于在当前目录下生成示例配置文件
+用于在当前目录下生成示例配置文件，校验当前目录下的配置文件
 
 #### 执行格式
 
 ```shell
 Usage:
   gitmm config [flags]
+  gitmm config [command]
+
+Available Commands:
+  generate    生成示例配置文件
+  verify      校验配置文件
 
 Flags:
   -h, --help   help for config
 
 Global Flags:
   -x, --debug string   show more detail. (default "info")
-# 示例
-gitmm config
+# 示例，校验配置文件
+gitmm config verify
 ```
 
 #### 参数

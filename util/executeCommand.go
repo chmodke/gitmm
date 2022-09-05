@@ -3,9 +3,17 @@ package util
 import (
 	"bytes"
 	"gitmm/log"
+	"golang.org/x/text/encoding/simplifiedchinese"
 	"os/exec"
 	"runtime"
 	"strings"
+)
+
+type Charset string
+
+const (
+	UTF8 = Charset("UTF-8")
+	GBK  = Charset("GBK")
 )
 
 func Execute(command string) (outStr string, errStr string, err error) {
@@ -21,7 +29,13 @@ func Execute(command string) (outStr string, errStr string, err error) {
 	cmd.Stderr = &stderr
 
 	err = cmd.Run()
-	outStr, errStr = strings.Trim(stdout.String(), "\n"), strings.Trim(stderr.String(), "\n")
+
+	if runtime.GOOS == "windows" {
+		outStr = strings.Trim(ConvertByte2String(stdout.Bytes(), GBK), "\n")
+		errStr = strings.Trim(ConvertByte2String(stderr.Bytes(), GBK), "\n")
+	} else {
+		outStr, errStr = strings.Trim(stdout.String(), "\n"), strings.Trim(stderr.String(), "\n")
+	}
 	return
 }
 
@@ -46,4 +60,18 @@ func GetOut(stdout string, stderr string, err error) (string, bool) {
 		log.Debug("execute succeed")
 		return stdout, true
 	}
+}
+
+func ConvertByte2String(byte []byte, charset Charset) string {
+	var str string
+	switch charset {
+	case GBK:
+		var decodeBytes, _ = simplifiedchinese.GBK.NewDecoder().Bytes(byte)
+		str = string(decodeBytes)
+	case UTF8:
+		fallthrough
+	default:
+		str = string(byte)
+	}
+	return str
 }
