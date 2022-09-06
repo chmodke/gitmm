@@ -42,19 +42,24 @@ var batchCmd = &cobra.Command{
 			log.Error("获取本地仓库失败")
 		}
 
+		result := make(map[string]string)
 		for _, repo := range repos {
 			if len(grep) > 0 && !util.Match(grep, repo) {
 				log.Info(util.LeftAlign(fmt.Sprintf("skip execute command at %s.", repo), 2, "-"))
+				result[repo] = SKIP
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start execute command at %s.", repo), 2, "-"))
 			ok := util.GitCommand(filepath.Join(localDir, repo), gitCommand)
 			if ok {
 				log.Info(util.LeftAlign(fmt.Sprintf("execute command %s done.", repo), 2, "-"))
+				result[repo] = OK
 			} else {
 				log.Error(util.LeftAlign(fmt.Sprintf("execute command %s fail.", repo), 2, "-"))
+				result[repo] = FAIL
 			}
 		}
+		util.ExecStatistic("batch", result)
 		return nil
 	},
 }
@@ -63,5 +68,5 @@ func init() {
 	rootCmd.AddCommand(batchCmd)
 
 	batchCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	batchCmd.Flags().StringP("grep", "g", "", "仓库过滤条件")
+	batchCmd.Flags().StringP("grep", "g", "", "仓库过滤条件，golang正则表达式")
 }

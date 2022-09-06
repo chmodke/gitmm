@@ -24,24 +24,29 @@ var syncCmd = &cobra.Command{
 
 		grep, _ := cmd.Flags().GetString("grep")
 		log.Debugf("grep: %s", grep)
+		result := make(map[string]string)
 		for _, repo := range config.Repos {
 			if len(grep) > 0 && !util.Match(grep, repo) {
 				log.Info(util.LeftAlign(fmt.Sprintf("skip %s sync.", repo), 2, "-"))
+				result[repo] = SKIP
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start %s sync.", repo), 2, "-"))
 			ok := util.GitSync(config.MainGroup, config.OriginGroup, repo, "tmp")
 			if ok {
 				log.Info(util.LeftAlign(fmt.Sprintf("sync %s done.", repo), 2, "-"))
+				result[repo] = OK
 			} else {
 				log.Error(util.LeftAlign(fmt.Sprintf("sync %s fail.", repo), 2, "-"))
+				result[repo] = FAIL
 			}
 		}
+		util.ExecStatistic("sync", result)
 		os.RemoveAll("tmp")
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(syncCmd)
-	syncCmd.Flags().StringP("grep", "g", "", "仓库过滤条件")
+	syncCmd.Flags().StringP("grep", "g", "", "仓库过滤条件，golang正则表达式")
 }

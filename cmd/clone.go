@@ -26,19 +26,24 @@ var cloneCmd = &cobra.Command{
 		log.Debugf("repos: %s", config.Repos)
 		log.Debugf("grep: %s", grep)
 
+		result := make(map[string]string)
 		for _, repo := range config.Repos {
 			if len(grep) > 0 && !util.Match(grep, repo) {
 				log.Info(util.LeftAlign(fmt.Sprintf("skip clone %s.", repo), 2, "-"))
+				result[repo] = SKIP
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start clone %s.", repo), 2, "-"))
 			ok := util.GitClone(config.OriginGroup, repo, workDir, workBranch)
 			if ok {
 				log.Info(util.LeftAlign(fmt.Sprintf("clone %s done.", repo), 2, "-"))
+				result[repo] = OK
 			} else {
 				log.Error(util.LeftAlign(fmt.Sprintf("clone %s fail.", repo), 2, "-"))
+				result[repo] = FAIL
 			}
 		}
+		util.ExecStatistic("clone", result)
 	},
 }
 
@@ -48,5 +53,5 @@ func init() {
 	cloneCmd.Flags().StringP("work_dir", "w", "master", "克隆代码的存放路径")
 	cloneCmd.MarkFlagRequired("work_dir")
 	cloneCmd.Flags().StringP("work_branch", "b", "master", "克隆代码的分支")
-	cloneCmd.Flags().StringP("grep", "g", "", "仓库过滤条件")
+	cloneCmd.Flags().StringP("grep", "g", "", "仓库过滤条件，golang正则表达式")
 }

@@ -7,6 +7,12 @@ import (
 	"os"
 )
 
+const (
+	OK   = "ok"
+	FAIL = "fail"
+	SKIP = "skip"
+)
+
 var rootCmd = &cobra.Command{
 	Use:   "gitmm",
 	Short: "git多仓库管理工具",

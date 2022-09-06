@@ -32,19 +32,24 @@ var pullCmd = &cobra.Command{
 		if err != nil {
 			log.Error("获取本地仓库失败")
 		}
+		result := make(map[string]string)
 		for _, repo := range repos {
 			if len(grep) > 0 && !util.Match(grep, repo) {
 				log.Info(util.LeftAlign(fmt.Sprintf("skip pull %s.", repo), 2, "-"))
+				result[repo] = SKIP
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start pull %s.", repo), 2, "-"))
 			ok := util.GitPull(filepath.Join(localDir, repo), force)
 			if ok {
+				result[repo] = OK
 				log.Info(util.LeftAlign(fmt.Sprintf("pull %s done.", repo), 2, "-"))
 			} else {
+				result[repo] = FAIL
 				log.Error(util.LeftAlign(fmt.Sprintf("pull %s fail.", repo), 2, "-"))
 			}
 		}
+		util.ExecStatistic("pull", result)
 	},
 }
 
@@ -53,5 +58,5 @@ func init() {
 
 	pullCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
 	pullCmd.Flags().BoolP("force", "f", false, "强制拉取")
-	pullCmd.Flags().StringP("grep", "g", "", "仓库过滤条件")
+	pullCmd.Flags().StringP("grep", "g", "", "仓库过滤条件，golang正则表达式")
 }

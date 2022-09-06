@@ -34,19 +34,24 @@ var createCmd = &cobra.Command{
 		if err != nil {
 			log.Error("获取本地仓库失败")
 		}
+		result := make(map[string]string)
 		for _, repo := range repos {
 			if len(grep) > 0 && !util.Match(grep, repo) {
 				log.Info(util.LeftAlign(fmt.Sprintf("skip create branch at %s.", repo), 2, "-"))
+				result[repo] = SKIP
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start create branch at %s.", repo), 2, "-"))
 			ok := util.GitCreateBranch(filepath.Join(localDir, repo), newBranch, startPoint)
 			if ok {
 				log.Info(util.LeftAlign(fmt.Sprintf("%s create branch done.", repo), 2, "-"))
+				result[repo] = OK
 			} else {
 				log.Error(util.LeftAlign(fmt.Sprintf("%s create branch fail.", repo), 2, "-"))
+				result[repo] = FAIL
 			}
 		}
+		util.ExecStatistic("create", result)
 	},
 }
 
@@ -57,5 +62,5 @@ func init() {
 	createCmd.Flags().StringP("new_branch", "b", "master", "新分支名称")
 	createCmd.MarkFlagRequired("new_branch")
 	createCmd.Flags().StringP("refs", "r", "HEAD", "新分支起点")
-	createCmd.Flags().StringP("grep", "g", "", "仓库过滤条件")
+	createCmd.Flags().StringP("grep", "g", "", "仓库过滤条件，golang正则表达式")
 }

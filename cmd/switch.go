@@ -36,20 +36,25 @@ var switchCmd = &cobra.Command{
 		if err != nil {
 			log.Error("获取本地仓库失败")
 		}
+		result := make(map[string]string)
 		for _, repo := range repos {
 			if len(grep) > 0 && !util.Match(grep, repo) {
 				log.Info(util.LeftAlign(fmt.Sprintf("skip switch %s branch.", repo), 2, "-"))
+				result[repo] = SKIP
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start switch %s branch.", repo), 2, "-"))
 			ok := util.GitSwitchBranch(filepath.Join(localDir, repo), branch, force)
 			if ok {
 				log.Info(util.LeftAlign(fmt.Sprintf("%s switch branch done.", repo), 2, "-"))
+				result[repo] = OK
 			} else {
 				log.Error(util.LeftAlign(fmt.Sprintf("%s switch branch fail.", repo), 2, "-"))
+				result[repo] = FAIL
 			}
 			log.Info(strings.Repeat("-", 80))
 		}
+		util.ExecStatistic("switch", result)
 	},
 }
 
@@ -60,5 +65,5 @@ func init() {
 	switchCmd.Flags().StringP("branch", "b", "master", "目标分支/tag/commit")
 	switchCmd.MarkFlagRequired("branch")
 	switchCmd.Flags().BoolP("force", "f", false, "强制切换")
-	switchCmd.Flags().StringP("grep", "g", "", "仓库过滤条件")
+	switchCmd.Flags().StringP("grep", "g", "", "仓库过滤条件，golang正则表达式")
 }
