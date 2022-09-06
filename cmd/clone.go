@@ -19,18 +19,24 @@ var cloneCmd = &cobra.Command{
 
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		workBranch, _ := cmd.Flags().GetString("work_branch")
+		grep, _ := cmd.Flags().GetString("grep")
 		log.Debugf("work_dir: %s", workDir)
 		log.Debugf("work_branch: %s", workBranch)
 		log.Debugf("origin_group: %s", config.OriginGroup)
 		log.Debugf("repos: %s", config.Repos)
+		log.Debugf("grep: %s", grep)
 
 		for _, repo := range config.Repos {
-			log.Info(util.Title(fmt.Sprintf("start clone %s.", repo), 80, "-"))
+			if len(grep) > 0 && !util.Match(grep, repo) {
+				log.Info(util.LeftAlign(fmt.Sprintf("skip clone %s.", repo), 2, "-"))
+				continue
+			}
+			log.Info(util.LeftAlign(fmt.Sprintf("start clone %s.", repo), 2, "-"))
 			ok := util.GitClone(config.OriginGroup, repo, workDir, workBranch)
 			if ok {
-				log.Info(util.Title(fmt.Sprintf("clone %s done.", repo), 80, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("clone %s done.", repo), 2, "-"))
 			} else {
-				log.Error(util.Title(fmt.Sprintf("clone %s fail.", repo), 80, "-"))
+				log.Error(util.LeftAlign(fmt.Sprintf("clone %s fail.", repo), 2, "-"))
 			}
 		}
 	},
@@ -42,4 +48,5 @@ func init() {
 	cloneCmd.Flags().StringP("work_dir", "w", "master", "克隆代码的存放路径")
 	cloneCmd.MarkFlagRequired("work_dir")
 	cloneCmd.Flags().StringP("work_branch", "b", "master", "克隆代码的分支")
+	cloneCmd.Flags().StringP("grep", "g", "", "仓库过滤条件")
 }

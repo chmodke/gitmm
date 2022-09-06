@@ -21,9 +21,11 @@ var switchCmd = &cobra.Command{
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		branch, _ := cmd.Flags().GetString("branch")
 		force, _ := cmd.Flags().GetBool("force")
+		grep, _ := cmd.Flags().GetString("grep")
 		log.Debugf("work_dir: %s", workDir)
 		log.Debugf("branch: %s", branch)
 		log.Debugf("force: %s", force)
+		log.Debugf("grep: %s", grep)
 
 		localDir, err := util.GetWorkDir(workDir)
 		if err != nil {
@@ -35,12 +37,16 @@ var switchCmd = &cobra.Command{
 			log.Error("获取本地仓库失败")
 		}
 		for _, repo := range repos {
-			log.Info(util.Title(fmt.Sprintf("start switch %s branch.", repo), 80, "-"))
+			if len(grep) > 0 && !util.Match(grep, repo) {
+				log.Info(util.LeftAlign(fmt.Sprintf("skip switch %s branch.", repo), 2, "-"))
+				continue
+			}
+			log.Info(util.LeftAlign(fmt.Sprintf("start switch %s branch.", repo), 2, "-"))
 			ok := util.GitSwitchBranch(filepath.Join(localDir, repo), branch, force)
 			if ok {
-				log.Info(util.Title(fmt.Sprintf("%s switch branch done.", repo), 80, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("%s switch branch done.", repo), 2, "-"))
 			} else {
-				log.Error(util.Title(fmt.Sprintf("%s switch branch fail.", repo), 80, "-"))
+				log.Error(util.LeftAlign(fmt.Sprintf("%s switch branch fail.", repo), 2, "-"))
 			}
 			log.Info(strings.Repeat("-", 80))
 		}
@@ -54,4 +60,5 @@ func init() {
 	switchCmd.Flags().StringP("branch", "b", "master", "目标分支/tag/commit")
 	switchCmd.MarkFlagRequired("branch")
 	switchCmd.Flags().BoolP("force", "f", false, "强制切换")
+	switchCmd.Flags().StringP("grep", "g", "", "仓库过滤条件")
 }

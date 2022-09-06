@@ -21,13 +21,20 @@ var syncCmd = &cobra.Command{
 		log.Debugf("main_group: %s", config.MainGroup)
 		log.Debugf("origin_group: %s", config.OriginGroup)
 		log.Debugf("repos: %s", config.Repos)
+
+		grep, _ := cmd.Flags().GetString("grep")
+		log.Debugf("grep: %s", grep)
 		for _, repo := range config.Repos {
-			log.Info(util.Title(fmt.Sprintf("start %s sync.", repo), 80, "-"))
+			if len(grep) > 0 && !util.Match(grep, repo) {
+				log.Info(util.LeftAlign(fmt.Sprintf("skip %s sync.", repo), 2, "-"))
+				continue
+			}
+			log.Info(util.LeftAlign(fmt.Sprintf("start %s sync.", repo), 2, "-"))
 			ok := util.GitSync(config.MainGroup, config.OriginGroup, repo, "tmp")
 			if ok {
-				log.Info(util.Title(fmt.Sprintf("sync %s done.", repo), 80, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("sync %s done.", repo), 2, "-"))
 			} else {
-				log.Error(util.Title(fmt.Sprintf("sync %s fail.", repo), 80, "-"))
+				log.Error(util.LeftAlign(fmt.Sprintf("sync %s fail.", repo), 2, "-"))
 			}
 		}
 		os.RemoveAll("tmp")
@@ -36,4 +43,5 @@ var syncCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(syncCmd)
+	syncCmd.Flags().StringP("grep", "g", "", "仓库过滤条件")
 }

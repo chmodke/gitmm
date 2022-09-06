@@ -23,7 +23,9 @@ var batchCmd = &cobra.Command{
 			return errors.New("请提供要执行的命令")
 		}
 		workDir, _ := cmd.Flags().GetString("work_dir")
+		grep, _ := cmd.Flags().GetString("grep")
 		log.Debugf("work_dir: %s", workDir)
+		log.Debugf("grep: %s", grep)
 
 		gitCommand := args[0]
 		gitCommand = strings.TrimLeft(gitCommand, "git ")
@@ -41,12 +43,16 @@ var batchCmd = &cobra.Command{
 		}
 
 		for _, repo := range repos {
-			log.Info(util.Title(fmt.Sprintf("start execute command at %s.", repo), 80, "-"))
+			if len(grep) > 0 && !util.Match(grep, repo) {
+				log.Info(util.LeftAlign(fmt.Sprintf("skip execute command at %s.", repo), 2, "-"))
+				continue
+			}
+			log.Info(util.LeftAlign(fmt.Sprintf("start execute command at %s.", repo), 2, "-"))
 			ok := util.GitCommand(filepath.Join(localDir, repo), gitCommand)
 			if ok {
-				log.Info(util.Title(fmt.Sprintf("execute command %s done.", repo), 80, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("execute command %s done.", repo), 2, "-"))
 			} else {
-				log.Error(util.Title(fmt.Sprintf("execute command %s fail.", repo), 80, "-"))
+				log.Error(util.LeftAlign(fmt.Sprintf("execute command %s fail.", repo), 2, "-"))
 			}
 		}
 		return nil
@@ -57,4 +63,5 @@ func init() {
 	rootCmd.AddCommand(batchCmd)
 
 	batchCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
+	batchCmd.Flags().StringP("grep", "g", "", "仓库过滤条件")
 }

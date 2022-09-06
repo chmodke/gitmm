@@ -17,7 +17,9 @@ var remoteCmd = &cobra.Command{
 	Example: "gitmm remote -w tmp",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
+		grep, _ := cmd.Flags().GetString("grep")
 		log.Debugf("work_dir: %s", workDir)
+		log.Debugf("grep: %s", grep)
 
 		localDir, err := util.GetWorkDir(workDir)
 		if err != nil {
@@ -29,12 +31,16 @@ var remoteCmd = &cobra.Command{
 			log.Error("获取本地仓库失败")
 		}
 		for _, repo := range repos {
-			log.Info(util.Title(fmt.Sprintf("get %s remote info.", repo), 80, "-"))
+			if len(grep) > 0 && !util.Match(grep, repo) {
+				log.Info(util.LeftAlign(fmt.Sprintf("skip get %s remote info.", repo), 2, "-"))
+				continue
+			}
+			log.Info(util.LeftAlign(fmt.Sprintf("get %s remote info.", repo), 2, "-"))
 			ok := util.GitRemote(filepath.Join(localDir, repo))
 			if ok {
-				log.Info(util.Title(fmt.Sprintf("show remote %s done.", repo), 80, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("show remote %s done.", repo), 2, "-"))
 			} else {
-				log.Error(util.Title(fmt.Sprintf("show remote %s fail.", repo), 80, "-"))
+				log.Error(util.LeftAlign(fmt.Sprintf("show remote %s fail.", repo), 2, "-"))
 			}
 		}
 	},
@@ -44,4 +50,5 @@ func init() {
 	rootCmd.AddCommand(remoteCmd)
 
 	remoteCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
+	remoteCmd.Flags().StringP("grep", "g", "", "仓库过滤条件")
 }

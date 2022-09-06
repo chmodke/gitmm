@@ -19,9 +19,11 @@ var createCmd = &cobra.Command{
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		newBranch, _ := cmd.Flags().GetString("new_branch")
 		startPoint, _ := cmd.Flags().GetString("refs")
+		grep, _ := cmd.Flags().GetString("grep")
 		log.Debugf("work_dir: %s", workDir)
 		log.Debugf("new_branch: %s", newBranch)
 		log.Debugf("refs: %s", startPoint)
+		log.Debugf("grep: %s", grep)
 
 		localDir, err := util.GetWorkDir(workDir)
 		if err != nil {
@@ -33,12 +35,16 @@ var createCmd = &cobra.Command{
 			log.Error("获取本地仓库失败")
 		}
 		for _, repo := range repos {
-			log.Info(util.Title(fmt.Sprintf("start create branch at %s.", repo), 80, "-"))
+			if len(grep) > 0 && !util.Match(grep, repo) {
+				log.Info(util.LeftAlign(fmt.Sprintf("skip create branch at %s.", repo), 2, "-"))
+				continue
+			}
+			log.Info(util.LeftAlign(fmt.Sprintf("start create branch at %s.", repo), 2, "-"))
 			ok := util.GitCreateBranch(filepath.Join(localDir, repo), newBranch, startPoint)
 			if ok {
-				log.Info(util.Title(fmt.Sprintf("%s create branch done.", repo), 80, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("%s create branch done.", repo), 2, "-"))
 			} else {
-				log.Error(util.Title(fmt.Sprintf("%s create branch fail.", repo), 80, "-"))
+				log.Error(util.LeftAlign(fmt.Sprintf("%s create branch fail.", repo), 2, "-"))
 			}
 		}
 	},
@@ -51,4 +57,5 @@ func init() {
 	createCmd.Flags().StringP("new_branch", "b", "master", "新分支名称")
 	createCmd.MarkFlagRequired("new_branch")
 	createCmd.Flags().StringP("refs", "r", "HEAD", "新分支起点")
+	createCmd.Flags().StringP("grep", "g", "", "仓库过滤条件")
 }
