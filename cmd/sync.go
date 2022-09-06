@@ -24,6 +24,8 @@ var syncCmd = &cobra.Command{
 
 		grep, _ := cmd.Flags().GetString("grep")
 		log.Debugf("grep: %s", grep)
+
+		tmp := fmt.Sprintf("_%s_", util.RandCreator(8))
 		result := make(map[string]string)
 		for _, repo := range config.Repos {
 			if len(grep) > 0 && !util.Match(grep, repo) {
@@ -32,7 +34,7 @@ var syncCmd = &cobra.Command{
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start %s sync.", repo), 2, "-"))
-			ok := util.GitSync(config.MainGroup, config.OriginGroup, repo, "tmp")
+			ok := util.GitSync(config.MainGroup, config.OriginGroup, repo, tmp)
 			if ok {
 				log.Info(util.LeftAlign(fmt.Sprintf("sync %s done.", repo), 2, "-"))
 				result[repo] = OK
@@ -42,7 +44,7 @@ var syncCmd = &cobra.Command{
 			}
 		}
 		util.ExecStatistic("sync", result)
-		os.RemoveAll("tmp")
+		os.RemoveAll(tmp)
 	},
 }
 
