@@ -76,3 +76,4 @@ __debug_bin
 node_modules/
 
 repo_sample.yaml
+bin
