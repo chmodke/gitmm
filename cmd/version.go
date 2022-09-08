@@ -3,13 +3,13 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/spf13/cobra"
 	"gitmm/util"
 	"os"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
-
-	"github.com/spf13/cobra"
 )
 
 var VERSION = "1.0.3"
@@ -23,6 +23,8 @@ var versionCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("gitmm version %s\n", VERSION)
 		fmt.Println(GetGitVersion())
+		fmt.Printf("%s %s\n", runtime.GOOS, runtime.GOARCH)
+		fmt.Printf("Report Bug: <%s>\n", "https://gitee.com/chmodke/gitmm.git")
 	},
 }
 
