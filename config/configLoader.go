@@ -9,9 +9,9 @@ import (
 var viperConfig *viper.Viper
 
 var (
-	OriginGroup string
-	MainGroup   string
-	Repos       []string
+	Origin   string
+	Upstream string
+	Repos    []string
 )
 
 func Load(configName string) (*viper.Viper, error) {
@@ -42,15 +42,15 @@ func LoadCfg() {
 		fmt.Println("可以执行`gitmm config`命令生成示例配置文件。")
 		os.Exit(1)
 	}
-	OriginGroup = viperConfig.GetString("origin_group")
-	MainGroup = viperConfig.GetString("main_group")
+	Origin = viperConfig.GetString("origin")
+	Upstream = viperConfig.GetString("upstream")
 	Repos = viperConfig.GetStringSlice("repos")
 }
 
 func WriteCfg() {
 	sample := viper.New()
-	sample.Set("main_group", "git@gitee.com:chmodke")
-	sample.Set("origin_group", "ssh://git@192.168.100.100:2222/chmodke")
+	sample.Set("upstream", "git@gitee.com:chmodke")
+	sample.Set("origin", "git@github.com:chmodke")
 	sample.Set("repos", []string{"arpc", "ftrans"})
 
 	sample.WriteConfigAs("repo_sample.yaml")

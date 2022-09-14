@@ -1,5 +1,5 @@
-main_group: "git@gitee.com:chmodke"
-origin_group: "ssh://git@192.168.100.100:2222/chmodke"
+upstream: "git@gitee.com:chmodke"
+origin: "ssh://git@192.168.100.100:2222/chmodke"
 repos:
   - arpc
   - ftrans

@@ -14,8 +14,8 @@ var configCmd = &cobra.Command{
 	Long:  `生成示例配置文件，校验配置文件`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config.LoadCfg()
-		log.Infof("main_group: %s", config.MainGroup)
-		log.Infof("origin_group: %s", config.OriginGroup)
+		log.Infof("upstream: %s", config.Upstream)
+		log.Infof("origin: %s", config.Origin)
 		log.Infof("repos: %s", config.Repos)
 	},
 }

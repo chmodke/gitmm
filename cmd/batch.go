@@ -52,10 +52,10 @@ var batchCmd = &cobra.Command{
 			log.Info(util.LeftAlign(fmt.Sprintf("start execute command at %s.", repo), 2, "-"))
 			ok := util.GitCommand(filepath.Join(localDir, repo), gitCommand)
 			if ok {
-				log.Info(util.LeftAlign(fmt.Sprintf("execute command %s done.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("execute command at %s done.", repo), 2, "-"))
 				result[repo] = OK
 			} else {
-				log.Error(util.LeftAlign(fmt.Sprintf("execute command %s fail.", repo), 2, "-"))
+				log.Error(util.LeftAlign(fmt.Sprintf("execute command at %s fail.", repo), 2, "-"))
 				result[repo] = FAIL
 			}
 		}

@@ -13,13 +13,13 @@ import (
 var syncCmd = &cobra.Command{
 	Use:   "sync",
 	Short: "批量同步主从仓库",
-	Long: `执行命令会读取当前目录下repo.yaml配置文件，遍历repos配置项，从main_group强制同步全部内容到origin_group中，需要用户对origin_group有强制写权限（取消分支保护）。
-注意：会强制以main_group中的内容覆盖origin_group中的内容。`,
+	Long: `执行命令会读取当前目录下repo.yaml配置文件，遍历repos配置项，从upstream强制同步全部内容到origin中，需要用户对origin有强制写权限（取消分支保护）。
+注意：会强制以upstream中的内容覆盖origin中的内容。`,
 	Example: "gitmm sync",
 	Run: func(cmd *cobra.Command, args []string) {
 		config.LoadCfg()
-		log.Debugf("main_group: %s", config.MainGroup)
-		log.Debugf("origin_group: %s", config.OriginGroup)
+		log.Debugf("upstream: %s", config.Upstream)
+		log.Debugf("origin: %s", config.Origin)
 		log.Debugf("repos: %s", config.Repos)
 
 		grep, _ := cmd.Flags().GetString("grep")
@@ -34,7 +34,7 @@ var syncCmd = &cobra.Command{
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start %s sync.", repo), 2, "-"))
-			ok := util.GitSync(config.MainGroup, config.OriginGroup, repo, tmp)
+			ok := util.GitSync(config.Upstream, config.Origin, repo, tmp)
 			if ok {
 				log.Info(util.LeftAlign(fmt.Sprintf("sync %s done.", repo), 2, "-"))
 				result[repo] = OK

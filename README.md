@@ -64,10 +64,10 @@ git config --global credential.helper store
 配置文件 `repo.yaml` 用来配置主从仓库上游信息，示例内容如下：
 
 ```yaml
-# main_group from
-main_group: "git@gitee.com:chmodke"
-# origin_group to
-origin_group: "ssh://git@192.168.100.100:2222/chmodke"
+# upstream from
+upstream: "git@gitee.com:chmodke"
+# origin to
+origin: "ssh://git@192.168.100.100:2222/chmodke"
 # repos repository list
 repos:
   - arpc
@@ -75,11 +75,11 @@ repos:
   - gitmm
 ```
 
-- main_group : 主仓库上游地址
-- origin_group : 从仓库(fork)上游地址
+- upstream : 主仓库上游地址
+- origin : 从仓库(fork)上游地址
 - repos : 仓库名称列表
 
-<font style="color:red">注意：`main_group` ：是主仓库上游地址，`origin_group` 是从仓库上游地址，一定不能配反了。</font>
+<font style="color:red">注意：`upstream` ：是主仓库上游地址，`origin` 是从仓库上游地址，一定不能配反了。</font>
 
 ## 全局选项
 
@@ -123,7 +123,7 @@ gitmm config verify
 
 > 批量克隆仓库
 
-执行命令会读取当前目录下`repo.yaml`配置文件，遍历`repos`配置项，从`origin_group`克隆代码到当前目录下`work_dir`指定的文件夹中。
+执行命令会读取当前目录下`repo.yaml`配置文件，遍历`repos`配置项，从`origin`克隆代码到当前目录下`work_dir`指定的文件夹中。
 
 #### 执行格式
 
@@ -155,9 +155,9 @@ gitmm clone -w tmp -b master
 
 > 批量同步主从仓库
 
-执行命令会读取当前目录下`repo.yaml`配置文件，遍历`repos`配置项，从`main_group`强制同步全部内容到`origin_group`中，需要用户对`origin_group`有强制写权限（取消分支保护）。
+执行命令会读取当前目录下`repo.yaml`配置文件，遍历`repos`配置项，从`upstream`强制同步全部内容到`origin`中，需要用户对`origin`有强制写权限（取消分支保护）。
 
-<font style="color:red">注意：会强制以 `main_group` 中的内容覆盖 `origin_group` 中的内容。</font>
+<font style="color:red">注意：会强制以 `upstream` 中的内容覆盖 `origin` 中的内容。</font>
 
 #### 执行格式
 

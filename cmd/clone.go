@@ -12,7 +12,7 @@ import (
 var cloneCmd = &cobra.Command{
 	Use:     "clone",
 	Short:   "批量克隆仓库",
-	Long:    "执行命令会读取当前目录下repo.yaml配置文件，遍历repos配置项，从origin_group克隆代码到当前目录下work_dir指定的文件夹中。",
+	Long:    "执行命令会读取当前目录下repo.yaml配置文件，遍历repos配置项，从origin克隆代码到当前目录下work_dir指定的文件夹中。",
 	Example: "gitmm clone -w tmp -b master",
 	Run: func(cmd *cobra.Command, args []string) {
 		config.LoadCfg()
@@ -22,7 +22,7 @@ var cloneCmd = &cobra.Command{
 		grep, _ := cmd.Flags().GetString("grep")
 		log.Debugf("work_dir: %s", workDir)
 		log.Debugf("work_branch: %s", workBranch)
-		log.Debugf("origin_group: %s", config.OriginGroup)
+		log.Debugf("origin: %s", config.Origin)
 		log.Debugf("repos: %s", config.Repos)
 		log.Debugf("grep: %s", grep)
 
@@ -34,7 +34,7 @@ var cloneCmd = &cobra.Command{
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start clone %s.", repo), 2, "-"))
-			ok := util.GitClone(config.OriginGroup, repo, workDir, workBranch)
+			ok := util.GitClone(config.Origin, repo, workDir, workBranch)
 			if ok {
 				log.Info(util.LeftAlign(fmt.Sprintf("clone %s done.", repo), 2, "-"))
 				result[repo] = OK

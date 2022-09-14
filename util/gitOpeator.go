@@ -44,20 +44,20 @@ func PathExists(path string) bool {
 	return false
 }
 
-func GitClone(originGroup string, repo string, workDir string, workBranch string) bool {
+func GitClone(origin string, repo string, workDir string, workBranch string) bool {
 	workPath, err := GetWorkDir(workDir)
 	if err != nil {
 		return false
 	}
 	localDir := filepath.Join(workPath, repo)
-	remoteAddr := fmt.Sprintf("%s/%s.git", originGroup, repo)
+	remoteAddr := fmt.Sprintf("%s/%s.git", origin, repo)
 	command := fmt.Sprintf("git clone -b %s -- %s %s", workBranch, remoteAddr, localDir)
 	return Out(Execute(command))
 }
 
-func GitSync(mainGroup string, originGroup string, repo string, workDir string) bool {
-	mainRemote := fmt.Sprintf("%s/%s.git", mainGroup, repo)
-	originRemote := fmt.Sprintf("%s/%s.git", originGroup, repo)
+func GitSync(upstream string, origin string, repo string, workDir string) bool {
+	upstreamRemote := fmt.Sprintf("%s/%s.git", upstream, repo)
+	originRemote := fmt.Sprintf("%s/%s.git", origin, repo)
 
 	workPath, err := GetWorkDir(workDir)
 	if err != nil {
@@ -75,14 +75,14 @@ func GitSync(mainGroup string, originGroup string, repo string, workDir string) 
 		return ret
 	}
 
-	log.Info("2.1 add main fetch url.")
-	command = fmt.Sprintf("git -C %s remote add main %s", localDir, mainRemote)
+	log.Info("2.1 add upstream fetch url.")
+	command = fmt.Sprintf("git -C %s remote add upstream %s", localDir, upstreamRemote)
 	ret = Out(Execute(command))
 	if !ret {
 		return ret
 	}
 
-	log.Info("2.2 fetch main all.")
+	log.Info("2.2 fetch upstream all.")
 	command = fmt.Sprintf("git -C %s fetch --all --prune --tags", localDir)
 	ret = Out(Execute(command))
 	if !ret {
@@ -100,13 +100,13 @@ func GitSync(mainGroup string, originGroup string, repo string, workDir string) 
 	for _, s := range strings.Split(out, "\n") {
 		branchName, ok := getBranchName(s)
 		if ok {
-			command = fmt.Sprintf("git -C %s branch -f --track %s main/%s", localDir, branchName, branchName)
+			command = fmt.Sprintf("git -C %s branch -f --track %s upstream/%s", localDir, branchName, branchName)
 			ret = Out(Execute(command))
 		}
 	}
 
-	log.Info("2.4 remove main fetch url.")
-	command = fmt.Sprintf("git -C %s remote remove main", localDir)
+	log.Info("2.4 remove upstream fetch url.")
+	command = fmt.Sprintf("git -C %s remote remove upstream", localDir)
 	ret = Out(Execute(command))
 	if !ret {
 		return ret
@@ -132,7 +132,7 @@ func GitSync(mainGroup string, originGroup string, repo string, workDir string) 
 }
 
 /*
-getBranchName 从main/master获取分支的名称master
+getBranchName 从upstream/master获取分支的名称master
 */
 func getBranchName(str string) (string, bool) {
 	realStr := strings.Trim(str, " ")
@@ -228,7 +228,7 @@ func GitSwitchBranch(localRepo, aimBranch string, force bool) bool {
 
 	command = fmt.Sprintf("git -C %s symbolic-ref --short HEAD", localRepo)
 	curBranch, ret := GetOut(Execute(command))
-	log.Infof("current branch %s", curBranch)
+	log.Infof("before switch branch %s", curBranch)
 
 	if force {
 		command = fmt.Sprintf("git -C %s clean -df", localRepo)
@@ -244,7 +244,7 @@ func GitSwitchBranch(localRepo, aimBranch string, force bool) bool {
 
 	command = fmt.Sprintf("git -C %s symbolic-ref --short HEAD", localRepo)
 	curBranch, ret = GetOut(Execute(command))
-	log.Infof("current branch %s", curBranch)
+	log.Infof("after switch branch %s", curBranch)
 	return ret
 }
 
