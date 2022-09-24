@@ -17,13 +17,15 @@ var createCmd = &cobra.Command{
 	Example: "git create -w tmp -b develop",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		newBranch, _ := cmd.Flags().GetString("new_branch")
-		startPoint, _ := cmd.Flags().GetString("refs")
-		grep, _ := cmd.Flags().GetString("grep")
 		log.Debugf("work_dir: %s", workDir)
+		newBranch, _ := cmd.Flags().GetString("new_branch")
 		log.Debugf("new_branch: %s", newBranch)
+		startPoint, _ := cmd.Flags().GetString("refs")
 		log.Debugf("refs: %s", startPoint)
-		log.Debugf("grep: %s", grep)
+		match, _ := cmd.Flags().GetString("match")
+		log.Debugf("match: %s", match)
+		invert, _ := cmd.Flags().GetString("invert-match")
+		log.Debugf("invert: %s", invert)
 
 		localDir, err := util.GetWorkDir(workDir)
 		if err != nil {
@@ -36,7 +38,7 @@ var createCmd = &cobra.Command{
 		}
 		result := make(map[string]string)
 		for _, repo := range repos {
-			if len(grep) > 0 && !util.Match(grep, repo) {
+			if !util.Match(repo, match, invert) {
 				log.Info(util.LeftAlign(fmt.Sprintf("skip create branch at %s.\n", repo), 2, "-"))
 				result[repo] = SKIP
 				continue
@@ -62,5 +64,6 @@ func init() {
 	createCmd.Flags().StringP("new_branch", "b", "master", "新分支名称")
 	createCmd.MarkFlagRequired("new_branch")
 	createCmd.Flags().StringP("refs", "r", "HEAD", "新分支起点")
-	createCmd.Flags().StringP("grep", "g", "", "仓库过滤条件，golang正则表达式")
+	createCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
+	createCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
 }

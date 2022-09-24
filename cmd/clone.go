@@ -16,19 +16,21 @@ var cloneCmd = &cobra.Command{
 	Example: "gitmm clone -w tmp -b master",
 	Run: func(cmd *cobra.Command, args []string) {
 		config.LoadCfg()
-
-		workDir, _ := cmd.Flags().GetString("work_dir")
-		workBranch, _ := cmd.Flags().GetString("work_branch")
-		grep, _ := cmd.Flags().GetString("grep")
-		log.Debugf("work_dir: %s", workDir)
-		log.Debugf("work_branch: %s", workBranch)
 		log.Debugf("origin: %s", config.Origin)
 		log.Debugf("repos: %s", config.Repos)
-		log.Debugf("grep: %s", grep)
+
+		workDir, _ := cmd.Flags().GetString("work_dir")
+		log.Debugf("work_dir: %s", workDir)
+		workBranch, _ := cmd.Flags().GetString("work_branch")
+		log.Debugf("work_branch: %s", workBranch)
+		match, _ := cmd.Flags().GetString("match")
+		log.Debugf("match: %s", match)
+		invert, _ := cmd.Flags().GetString("invert-match")
+		log.Debugf("invert: %s", invert)
 
 		result := make(map[string]string)
 		for _, repo := range config.Repos {
-			if len(grep) > 0 && !util.Match(grep, repo) {
+			if !util.Match(repo, match, invert) {
 				log.Info(util.LeftAlign(fmt.Sprintf("skip clone %s.\n", repo), 2, "-"))
 				result[repo] = SKIP
 				continue
@@ -53,5 +55,6 @@ func init() {
 	cloneCmd.Flags().StringP("work_dir", "w", "master", "克隆代码的存放路径")
 	cloneCmd.MarkFlagRequired("work_dir")
 	cloneCmd.Flags().StringP("work_branch", "b", "master", "克隆代码的分支")
-	cloneCmd.Flags().StringP("grep", "g", "", "仓库过滤条件，golang正则表达式")
+	cloneCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
+	cloneCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
 }

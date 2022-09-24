@@ -23,9 +23,11 @@ var batchCmd = &cobra.Command{
 			return errors.New("请提供要执行的命令")
 		}
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		grep, _ := cmd.Flags().GetString("grep")
 		log.Debugf("work_dir: %s", workDir)
-		log.Debugf("grep: %s", grep)
+		match, _ := cmd.Flags().GetString("match")
+		log.Debugf("match: %s", match)
+		invert, _ := cmd.Flags().GetString("invert-match")
+		log.Debugf("invert: %s", invert)
 
 		gitCommand := args[0]
 		gitCommand = strings.TrimLeft(gitCommand, "git ")
@@ -44,7 +46,7 @@ var batchCmd = &cobra.Command{
 
 		result := make(map[string]string)
 		for _, repo := range repos {
-			if len(grep) > 0 && !util.Match(grep, repo) {
+			if !util.Match(repo, match, invert) {
 				log.Info(util.LeftAlign(fmt.Sprintf("skip execute command at %s.\n", repo), 2, "-"))
 				result[repo] = SKIP
 				continue
@@ -68,5 +70,6 @@ func init() {
 	rootCmd.AddCommand(batchCmd)
 
 	batchCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	batchCmd.Flags().StringP("grep", "g", "", "仓库过滤条件，golang正则表达式")
+	batchCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
+	batchCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
 }

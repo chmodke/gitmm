@@ -4,9 +4,19 @@
 
 ## 安装卸载方法
 
+### 编译
+
+```shell
+make clean build_win install_win build_unix package
+```
+
 ### 安装
 
-编译后，复制`gitmm.exe`到`C:\Windows`目录下即可全局使用。
+编译后，复制`gitmm.exe`到`C:\Windows`目录下即可全局使用。或者
+
+```shell
+make clean build_win install_win
+```
 
 ### 卸载
 
@@ -89,6 +99,31 @@ repos:
 
 > 所有子命令都支持`-h`或`--help` 参数查看帮助。
 
+```shell
+Usage:
+  gitmm [command]
+
+Available Commands:
+  batch       批量执行提供的git命令
+  clone       批量克隆仓库
+  completion  Generate the autocompletion script for the specified shell
+  config      生成示例配置文件，校验配置文件
+  create      批量创建分支
+  help        Help about any command
+  pull        批量拉取仓库
+  remote      批量查看仓库远程信息
+  switch      批量切换分支
+  sync        批量同步主从仓库
+  version     Show tool version
+
+Flags:
+  -x, --debug string   show more detail. (default "info")
+  -h, --help           help for gitmm
+  -v, --version        show tool version.
+
+Use "gitmm [command] --help" for more information about a command.
+```
+
 ### config
 
 > 生成示例配置文件
@@ -135,9 +170,11 @@ Examples:
 gitmm clone -w tmp -b master
 
 Flags:
-  -h, --help                 help for clone
-  -b, --work_branch string   克隆代码的分支 (default "master")
-  -w, --work_dir string      克隆代码的存放路径 (default "master")
+  -h, --help                  help for clone
+  -i, --invert-match string   仓库反向过滤条件，golang正则表达式
+  -m, --match string          仓库过滤条件，golang正则表达式
+  -b, --work_branch string    克隆代码的分支 (default "master")
+  -w, --work_dir string       克隆代码的存放路径 (default "master")
 
 Global Flags:
   -x, --debug string   show more detail. (default "info")
@@ -150,6 +187,8 @@ gitmm clone -w tmp -b master
 
 - work_dir: 必填项，克隆代码的存放路径
 - work_branch: 可选项，克隆代码的分支，缺省值`master`
+- match: 可选项，仓库过滤条件，golang正则表达式，优先级高于`invert-match`
+- invert-match: 可选项，仓库反向过滤条件，golang正则表达式
 
 ### sync
 
@@ -169,7 +208,9 @@ Examples:
 gitmm sync
 
 Flags:
-  -h, --help   help for sync
+  -h, --help                  help for sync
+  -i, --invert-match string   仓库反向过滤条件，golang正则表达式
+  -m, --match string          仓库过滤条件，golang正则表达式
 
 Global Flags:
   -x, --debug string   show more detail. (default "info")
@@ -177,7 +218,8 @@ Global Flags:
 
 #### 参数
 
-- 无参数
+- match: 可选项，仓库过滤条件，golang正则表达式，优先级高于`invert-match`
+- invert-match: 可选项，仓库反向过滤条件，golang正则表达式
 
 ### pull
 
@@ -195,9 +237,11 @@ Examples:
 gitmm pull -w tmp
 
 Flags:
-  -f, --force             强制拉取
-  -h, --help              help for pull
-  -w, --work_dir string   本地代码的存放路径 (default ".")
+  -f, --force                 强制拉取
+  -h, --help                  help for pull
+  -i, --invert-match string   仓库反向过滤条件，golang正则表达式
+  -m, --match string          仓库过滤条件，golang正则表达式
+  -w, --work_dir string       本地代码的存放路径 (default ".")
 
 Global Flags:
   -x, --debug string   show more detail. (default "info")
@@ -208,7 +252,9 @@ gitmm pull -w tmp
 #### 参数
 
 - work_dir: 可选项，仓库的存放路径，默认值当前目录
-- f: 可选项，强制拉取，强制拉取时会回退本地所有修改到远程的最新记录
+- force: 可选项，强制拉取，强制拉取时会回退本地所有修改到远程的最新记录
+- match: 可选项，仓库过滤条件，golang正则表达式，优先级高于`invert-match`
+- invert-match: 可选项，仓库反向过滤条件，golang正则表达式
 
 ### create
 
@@ -226,10 +272,12 @@ Examples:
 git create -w tmp -b develop
 
 Flags:
-  -h, --help                help for create
-  -b, --new_branch string   新分支名称 (default "master")
-  -r, --refs string         新分支起点 (default "HEAD")
-  -w, --work_dir string     本地代码的存放路径 (default ".")
+  -h, --help                  help for create
+  -i, --invert-match string   仓库反向过滤条件，golang正则表达式
+  -m, --match string          仓库过滤条件，golang正则表达式
+  -b, --new_branch string     新分支名称 (default "master")
+  -r, --refs string           新分支起点 (default "HEAD")
+  -w, --work_dir string       本地代码的存放路径 (default ".")
 
 Global Flags:
   -x, --debug string   show more detail. (default "info")
@@ -242,6 +290,8 @@ gitmm create -w tmp -b develop
 - work_dir: 可选项，仓库的存放路径，默认值当前目录
 - new_branch: 必填项，新分支名称
 - start_point: 可选项，分支起始点，默认`HEAD`
+- match: 可选项，仓库过滤条件，golang正则表达式，优先级高于`invert-match`
+- invert-match: 可选项，仓库反向过滤条件，golang正则表达式
 
 ### switch
 
@@ -259,10 +309,12 @@ Examples:
 gitmm switch -w tmp -b develop
 
 Flags:
-  -b, --branch string     目标分支/tag/commit (default "master")
-  -f, --force             强制切换
-  -h, --help              help for switch
-  -w, --work_dir string   本地代码的存放路径 (default ".")
+  -b, --branch string         目标分支/tag/commit (default "master")
+  -f, --force                 强制切换
+  -h, --help                  help for switch
+  -i, --invert-match string   仓库反向过滤条件，golang正则表达式
+  -m, --match string          仓库过滤条件，golang正则表达式
+  -w, --work_dir string       本地代码的存放路径 (default ".")
 
 Global Flags:
   -x, --debug string   show more detail. (default "info")
@@ -274,7 +326,9 @@ gitmm switch -w tmp -b develop
 
 - work_dir: 可选项，仓库的存放路径，默认值当前目录
 - branch: 必填项，目标分支名称
-- f: 可选项，强制切换，强制切换时会回退本地所有修改
+- force: 可选项，强制切换，强制切换时会回退本地所有修改
+- match: 可选项，仓库过滤条件，golang正则表达式，优先级高于`invert-match`
+- invert-match: 可选项，仓库反向过滤条件，golang正则表达式
 
 ### remote
 
@@ -292,8 +346,10 @@ Examples:
 gitmm remote -w tmp
 
 Flags:
-  -h, --help              help for remote
-  -w, --work_dir string   本地代码的存放路径 (default ".")
+  -h, --help                  help for remote
+  -i, --invert-match string   仓库反向过滤条件，golang正则表达式
+  -m, --match string          仓库过滤条件，golang正则表达式
+  -w, --work_dir string       本地代码的存放路径 (default ".")
 
 Global Flags:
   -x, --debug string   show more detail. (default "info")
@@ -304,6 +360,8 @@ gitmm remote -w tmp
 #### 参数
 
 - work_dir: 可选项，仓库的存放路径，默认值当前目录
+- match: 可选项，仓库过滤条件，golang正则表达式，优先级高于`invert-match`
+- invert-match: 可选项，仓库反向过滤条件，golang正则表达式
 
 ### batch
 
@@ -321,8 +379,10 @@ Examples:
 gitmm batch -w tmp 'log --oneline -n1'
 
 Flags:
-  -h, --help              help for batch
-  -w, --work_dir string   本地代码的存放路径 (default ".")
+  -h, --help                  help for batch
+  -i, --invert-match string   仓库反向过滤条件，golang正则表达式
+  -m, --match string          仓库过滤条件，golang正则表达式
+  -w, --work_dir string       本地代码的存放路径 (default ".")
 
 Global Flags:
   -x, --debug string   show more detail. (default "info")
@@ -333,4 +393,6 @@ gitmm batch -w tmp 'log --oneline -n1'
 #### 参数
 
 - work_dir: 可选项，仓库的存放路径，默认值当前目录
+- match: 可选项，仓库过滤条件，golang正则表达式，优先级高于`invert-match`
+- invert-match: 可选项，仓库反向过滤条件，golang正则表达式
 - command: 必填项，git命令

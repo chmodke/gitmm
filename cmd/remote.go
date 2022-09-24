@@ -17,9 +17,11 @@ var remoteCmd = &cobra.Command{
 	Example: "gitmm remote -w tmp",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		grep, _ := cmd.Flags().GetString("grep")
 		log.Debugf("work_dir: %s", workDir)
-		log.Debugf("grep: %s", grep)
+		match, _ := cmd.Flags().GetString("match")
+		log.Debugf("match: %s", match)
+		invert, _ := cmd.Flags().GetString("invert-match")
+		log.Debugf("invert: %s", invert)
 
 		localDir, err := util.GetWorkDir(workDir)
 		if err != nil {
@@ -32,7 +34,7 @@ var remoteCmd = &cobra.Command{
 		}
 		result := make(map[string]string)
 		for _, repo := range repos {
-			if len(grep) > 0 && !util.Match(grep, repo) {
+			if !util.Match(repo, match, invert) {
 				log.Info(util.LeftAlign(fmt.Sprintf("skip show %s remote info.\n", repo), 2, "-"))
 				result[repo] = SKIP
 				continue
@@ -55,5 +57,6 @@ func init() {
 	rootCmd.AddCommand(remoteCmd)
 
 	remoteCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	remoteCmd.Flags().StringP("grep", "g", "", "仓库过滤条件，golang正则表达式")
+	remoteCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
+	remoteCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
 }

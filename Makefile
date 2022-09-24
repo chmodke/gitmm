@@ -1,6 +1,6 @@
 BUILD_NAME:=gitmm
 BIN_DIR:=bin
-BUILD_VERSION:=1.0.5
+BUILD_VERSION:=1.0.6
 BUILD_DATE:=$(shell date '+%Y%m%d.%H%M%S')
 SOURCE:=*.go
 LDFLAGS:=-ldflags "-X '${BUILD_NAME}/cmd.VERSION=${BUILD_VERSION}-${BUILD_DATE}'"

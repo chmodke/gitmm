@@ -19,9 +19,20 @@ func LeftAlign(text string, width int, padding string) string {
 	return fmt.Sprintf("%s %s", strings.Repeat(padding, width), text)
 }
 
-func Match(regex string, text string) bool {
-	r, _ := regexp.Compile(regex)
-	return r.MatchString(text)
+func Match(text string, regex string, invertRegex string) bool {
+	if len(regex) == 0 && len(invertRegex) == 0 {
+		return true
+	}
+	var result = true
+	if len(regex) > 0 {
+		r, _ := regexp.Compile(regex)
+		result = result && r.MatchString(text)
+	}
+	if result && len(invertRegex) > 0 {
+		ir, _ := regexp.Compile(invertRegex)
+		result = result && !ir.MatchString(text)
+	}
+	return result
 }
 
 func ExecStatistic(text string, result map[string]string) {

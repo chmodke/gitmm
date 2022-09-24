@@ -17,11 +17,13 @@ var pullCmd = &cobra.Command{
 	Example: "gitmm pull -w tmp",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		force, _ := cmd.Flags().GetBool("force")
-		grep, _ := cmd.Flags().GetString("grep")
 		log.Debugf("work_dir: %s", workDir)
+		force, _ := cmd.Flags().GetBool("force")
 		log.Debugf("force: %s", force)
-		log.Debugf("grep: %s", grep)
+		match, _ := cmd.Flags().GetString("match")
+		log.Debugf("match: %s", match)
+		invert, _ := cmd.Flags().GetString("invert-match")
+		log.Debugf("invert: %s", invert)
 
 		localDir, err := util.GetWorkDir(workDir)
 		if err != nil {
@@ -34,7 +36,7 @@ var pullCmd = &cobra.Command{
 		}
 		result := make(map[string]string)
 		for _, repo := range repos {
-			if len(grep) > 0 && !util.Match(grep, repo) {
+			if !util.Match(repo, match, invert) {
 				log.Info(util.LeftAlign(fmt.Sprintf("skip pull %s.\n", repo), 2, "-"))
 				result[repo] = SKIP
 				continue
@@ -58,5 +60,6 @@ func init() {
 
 	pullCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
 	pullCmd.Flags().BoolP("force", "f", false, "强制拉取")
-	pullCmd.Flags().StringP("grep", "g", "", "仓库过滤条件，golang正则表达式")
+	pullCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
+	pullCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
 }

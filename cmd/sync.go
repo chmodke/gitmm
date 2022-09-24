@@ -22,13 +22,15 @@ var syncCmd = &cobra.Command{
 		log.Debugf("origin: %s", config.Origin)
 		log.Debugf("repos: %s", config.Repos)
 
-		grep, _ := cmd.Flags().GetString("grep")
-		log.Debugf("grep: %s", grep)
+		match, _ := cmd.Flags().GetString("match")
+		log.Debugf("match: %s", match)
+		invert, _ := cmd.Flags().GetString("invert-match")
+		log.Debugf("invert: %s", invert)
 
 		tmp := fmt.Sprintf("_%s_", util.RandCreator(8))
 		result := make(map[string]string)
 		for _, repo := range config.Repos {
-			if len(grep) > 0 && !util.Match(grep, repo) {
+			if !util.Match(repo, match, invert) {
 				log.Info(util.LeftAlign(fmt.Sprintf("skip %s sync.\n", repo), 2, "-"))
 				result[repo] = SKIP
 				continue
@@ -50,5 +52,6 @@ var syncCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(syncCmd)
-	syncCmd.Flags().StringP("grep", "g", "", "仓库过滤条件，golang正则表达式")
+	syncCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
+	syncCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
 }

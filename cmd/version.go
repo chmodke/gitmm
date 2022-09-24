@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-var VERSION = "1.0.3"
+var VERSION = "1.0.6"
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
