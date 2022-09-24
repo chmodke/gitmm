@@ -51,8 +51,18 @@ func GitClone(origin string, repo string, workDir string, workBranch string) boo
 	}
 	localDir := filepath.Join(workPath, repo)
 	remoteAddr := fmt.Sprintf("%s/%s.git", origin, repo)
-	command := fmt.Sprintf("git clone -b %s -- %s %s", workBranch, remoteAddr, localDir)
-	return Out(Execute(command))
+	log.Infof("from %s clone %s.", origin, repo)
+	command := fmt.Sprintf("git clone -- %s %s", remoteAddr, localDir)
+	ret := Out(Execute(command))
+	if !ret {
+		return ret
+	}
+
+	command = fmt.Sprintf("git -C %s checkout %s", localDir, workBranch)
+	if !Status(Execute(command)) {
+		log.Warnf("switch to %s fail.", workBranch)
+	}
+	return ret
 }
 
 func GitSync(upstream string, origin string, repo string, workDir string) bool {
@@ -68,8 +78,9 @@ func GitSync(upstream string, origin string, repo string, workDir string) bool {
 	var command string
 	var ret bool
 
+	log.Infof("sync %s, from %s to %s.", repo, upstream, origin)
 	log.Info("1.1 init local repo.")
-	command = fmt.Sprintf("git init -b %s %s", "master", localDir)
+	command = fmt.Sprintf("git init %s", localDir)
 	ret = Out(Execute(command))
 	if !ret {
 		return ret

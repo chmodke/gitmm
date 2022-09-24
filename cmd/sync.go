@@ -29,17 +29,17 @@ var syncCmd = &cobra.Command{
 		result := make(map[string]string)
 		for _, repo := range config.Repos {
 			if len(grep) > 0 && !util.Match(grep, repo) {
-				log.Info(util.LeftAlign(fmt.Sprintf("skip %s sync.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("skip %s sync.\n", repo), 2, "-"))
 				result[repo] = SKIP
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start %s sync.", repo), 2, "-"))
 			ok := util.GitSync(config.Upstream, config.Origin, repo, tmp)
 			if ok {
-				log.Info(util.LeftAlign(fmt.Sprintf("sync %s done.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("sync %s done.\n", repo), 2, "-"))
 				result[repo] = OK
 			} else {
-				log.Error(util.LeftAlign(fmt.Sprintf("sync %s fail.", repo), 2, "-"))
+				log.Error(util.LeftAlign(fmt.Sprintf("sync %s fail.\n", repo), 2, "-"))
 				result[repo] = FAIL
 			}
 		}

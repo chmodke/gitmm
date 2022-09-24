@@ -35,7 +35,7 @@ var pullCmd = &cobra.Command{
 		result := make(map[string]string)
 		for _, repo := range repos {
 			if len(grep) > 0 && !util.Match(grep, repo) {
-				log.Info(util.LeftAlign(fmt.Sprintf("skip pull %s.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("skip pull %s.\n", repo), 2, "-"))
 				result[repo] = SKIP
 				continue
 			}
@@ -43,10 +43,10 @@ var pullCmd = &cobra.Command{
 			ok := util.GitPull(filepath.Join(localDir, repo), force)
 			if ok {
 				result[repo] = OK
-				log.Info(util.LeftAlign(fmt.Sprintf("pull %s done.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("pull %s done.\n", repo), 2, "-"))
 			} else {
 				result[repo] = FAIL
-				log.Error(util.LeftAlign(fmt.Sprintf("pull %s fail.", repo), 2, "-"))
+				log.Error(util.LeftAlign(fmt.Sprintf("pull %s fail.\n", repo), 2, "-"))
 			}
 		}
 		util.ExecStatistic("pull", result)

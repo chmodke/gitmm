@@ -33,17 +33,17 @@ var remoteCmd = &cobra.Command{
 		result := make(map[string]string)
 		for _, repo := range repos {
 			if len(grep) > 0 && !util.Match(grep, repo) {
-				log.Info(util.LeftAlign(fmt.Sprintf("skip get %s remote info.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("skip show %s remote info.\n", repo), 2, "-"))
 				result[repo] = SKIP
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("get %s remote info.", repo), 2, "-"))
 			ok := util.GitRemote(filepath.Join(localDir, repo))
 			if ok {
-				log.Info(util.LeftAlign(fmt.Sprintf("show remote %s done.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("show remote %s done.\n", repo), 2, "-"))
 				result[repo] = OK
 			} else {
-				log.Error(util.LeftAlign(fmt.Sprintf("show remote %s fail.", repo), 2, "-"))
+				log.Error(util.LeftAlign(fmt.Sprintf("show remote %s fail.\n", repo), 2, "-"))
 				result[repo] = FAIL
 			}
 		}

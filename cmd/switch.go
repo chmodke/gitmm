@@ -39,17 +39,17 @@ var switchCmd = &cobra.Command{
 		result := make(map[string]string)
 		for _, repo := range repos {
 			if len(grep) > 0 && !util.Match(grep, repo) {
-				log.Info(util.LeftAlign(fmt.Sprintf("skip switch %s branch.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("skip switch %s branch.\n", repo), 2, "-"))
 				result[repo] = SKIP
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start switch %s branch.", repo), 2, "-"))
 			ok := util.GitSwitchBranch(filepath.Join(localDir, repo), branch, force)
 			if ok {
-				log.Info(util.LeftAlign(fmt.Sprintf("%s switch branch done.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("%s switch branch done.\n", repo), 2, "-"))
 				result[repo] = OK
 			} else {
-				log.Error(util.LeftAlign(fmt.Sprintf("%s switch branch fail.", repo), 2, "-"))
+				log.Error(util.LeftAlign(fmt.Sprintf("%s switch branch fail.\n", repo), 2, "-"))
 				result[repo] = FAIL
 			}
 			log.Info(strings.Repeat("-", 80))

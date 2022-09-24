@@ -52,7 +52,7 @@ func Debug(msg string) {
 
 func Debugf(template string, args ...interface{}) {
 	if level <= DEBUG {
-		write(DEBUG, fmt.Sprintf(template, args))
+		write(DEBUG, fmt.Sprintf(template, args...))
 	}
 }
 
@@ -64,7 +64,7 @@ func DebugO(msg string) {
 
 func DebugOf(template string, args ...interface{}) {
 	if level <= DEBUG {
-		out(fmt.Sprintf(template, args))
+		out(fmt.Sprintf(template, args...))
 	}
 }
 
@@ -75,7 +75,7 @@ func Info(msg string) {
 }
 func Infof(template string, args ...interface{}) {
 	if level <= INFO {
-		write(INFO, fmt.Sprintf(template, args))
+		write(INFO, fmt.Sprintf(template, args...))
 	}
 }
 
@@ -87,7 +87,7 @@ func InfoO(msg string) {
 
 func InfoOf(template string, args ...interface{}) {
 	if level <= INFO {
-		out(fmt.Sprintf(template, args))
+		out(fmt.Sprintf(template, args...))
 	}
 }
 
@@ -98,7 +98,7 @@ func Warn(msg string) {
 }
 func Warnf(template string, args ...interface{}) {
 	if level <= WARN {
-		write(WARN, fmt.Sprintf(template, args))
+		write(WARN, fmt.Sprintf(template, args...))
 	}
 }
 
@@ -110,7 +110,7 @@ func WarnO(msg string) {
 
 func WarnOf(template string, args ...interface{}) {
 	if level <= WARN {
-		out(fmt.Sprintf(template, args))
+		out(fmt.Sprintf(template, args...))
 	}
 }
 
@@ -121,7 +121,7 @@ func Error(msg string) {
 }
 func Errorf(template string, args ...interface{}) {
 	if level <= ERROR {
-		write(ERROR, fmt.Sprintf(template, args))
+		write(ERROR, fmt.Sprintf(template, args...))
 	}
 }
 
@@ -133,7 +133,7 @@ func ErrorO(msg string) {
 
 func ErrorOf(template string, args ...interface{}) {
 	if level <= ERROR {
-		out(fmt.Sprintf(template, args))
+		out(fmt.Sprintf(template, args...))
 	}
 }
 

@@ -45,17 +45,17 @@ var batchCmd = &cobra.Command{
 		result := make(map[string]string)
 		for _, repo := range repos {
 			if len(grep) > 0 && !util.Match(grep, repo) {
-				log.Info(util.LeftAlign(fmt.Sprintf("skip execute command at %s.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("skip execute command at %s.\n", repo), 2, "-"))
 				result[repo] = SKIP
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start execute command at %s.", repo), 2, "-"))
 			ok := util.GitCommand(filepath.Join(localDir, repo), gitCommand)
 			if ok {
-				log.Info(util.LeftAlign(fmt.Sprintf("execute command at %s done.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("execute command at %s done.\n", repo), 2, "-"))
 				result[repo] = OK
 			} else {
-				log.Error(util.LeftAlign(fmt.Sprintf("execute command at %s fail.", repo), 2, "-"))
+				log.Error(util.LeftAlign(fmt.Sprintf("execute command at %s fail.\n", repo), 2, "-"))
 				result[repo] = FAIL
 			}
 		}

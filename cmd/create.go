@@ -37,17 +37,17 @@ var createCmd = &cobra.Command{
 		result := make(map[string]string)
 		for _, repo := range repos {
 			if len(grep) > 0 && !util.Match(grep, repo) {
-				log.Info(util.LeftAlign(fmt.Sprintf("skip create branch at %s.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("skip create branch at %s.\n", repo), 2, "-"))
 				result[repo] = SKIP
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start create branch at %s.", repo), 2, "-"))
 			ok := util.GitCreateBranch(filepath.Join(localDir, repo), newBranch, startPoint)
 			if ok {
-				log.Info(util.LeftAlign(fmt.Sprintf("%s create branch done.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("%s create branch done.\n", repo), 2, "-"))
 				result[repo] = OK
 			} else {
-				log.Error(util.LeftAlign(fmt.Sprintf("%s create branch fail.", repo), 2, "-"))
+				log.Error(util.LeftAlign(fmt.Sprintf("%s create branch fail.\n", repo), 2, "-"))
 				result[repo] = FAIL
 			}
 		}

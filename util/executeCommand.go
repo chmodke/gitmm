@@ -39,6 +39,14 @@ func Execute(command string) (outStr string, errStr string, err error) {
 	return
 }
 
+func Status(stdout string, stderr string, err error) bool {
+	if err != nil {
+		return false
+	} else {
+		return true
+	}
+}
+
 func Out(stdout string, stderr string, err error) bool {
 	if err != nil {
 		log.Error("execute fail")

@@ -29,17 +29,17 @@ var cloneCmd = &cobra.Command{
 		result := make(map[string]string)
 		for _, repo := range config.Repos {
 			if len(grep) > 0 && !util.Match(grep, repo) {
-				log.Info(util.LeftAlign(fmt.Sprintf("skip clone %s.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("skip clone %s.\n", repo), 2, "-"))
 				result[repo] = SKIP
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start clone %s.", repo), 2, "-"))
 			ok := util.GitClone(config.Origin, repo, workDir, workBranch)
 			if ok {
-				log.Info(util.LeftAlign(fmt.Sprintf("clone %s done.", repo), 2, "-"))
+				log.Info(util.LeftAlign(fmt.Sprintf("clone %s done.\n", repo), 2, "-"))
 				result[repo] = OK
 			} else {
-				log.Error(util.LeftAlign(fmt.Sprintf("clone %s fail.", repo), 2, "-"))
+				log.Error(util.LeftAlign(fmt.Sprintf("clone %s fail.\n", repo), 2, "-"))
 				result[repo] = FAIL
 			}
 		}
