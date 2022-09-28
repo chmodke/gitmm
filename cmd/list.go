@@ -7,6 +7,7 @@ import (
 	"gitmm/log"
 	"gitmm/util"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -23,6 +24,8 @@ var listCmd = &cobra.Command{
 		log.Debugf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
 		log.Debugf("invert: %s", invert)
+		lineNumber, _ := cmd.Flags().GetInt("line-number")
+		log.Debugf("line-number: %d", lineNumber)
 
 		localDir, err := util.GetWorkDir(workDir)
 		if err != nil {
@@ -38,7 +41,8 @@ var listCmd = &cobra.Command{
 		var commands []string
 		commands = append(commands, "git")
 		commands = append(commands, "-C %s")
-		commands = append(commands, "log -n1")
+		commands = append(commands, "log")
+		commands = append(commands, "-n"+strconv.Itoa(lineNumber))
 		commands = append(commands, "--pretty=\"format:%%ad %%h %%d %%n%%s%%n\"")
 		commands = append(commands, "--date=iso")
 		preCmd := strings.Join(commands, " ")
@@ -75,4 +79,5 @@ func init() {
 	listCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
 	listCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
 	listCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
+	listCmd.Flags().IntP("line-number", "n", 1, "日志行数")
 }
