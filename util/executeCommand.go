@@ -4,8 +4,18 @@ import (
 	"gitmm/log"
 )
 
+type Charset string
+
+const (
+	UTF8 = Charset("UTF-8")
+	GBK  = Charset("GBK")
+)
+
 func Execute(command string) (outStr string, errStr string, err error) {
-	return ExecShell(command)
+	return ExecShell(command, UTF8)
+}
+func ExecuteWithCharset(command string, charset Charset) (outStr string, errStr string, err error) {
+	return ExecShell(command, charset)
 }
 
 func Status(stdout string, stderr string, err error) bool {

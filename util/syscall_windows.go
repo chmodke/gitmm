@@ -11,14 +11,7 @@ import (
 	"syscall"
 )
 
-type Charset string
-
-const (
-	UTF8 = Charset("UTF-8")
-	GBK  = Charset("GBK")
-)
-
-func ExecShell(command string) (outStr string, errStr string, err error) {
+func ExecShell(command string, charset Charset) (outStr string, errStr string, err error) {
 	log.Debugf("command: %s", command)
 	var cmd = exec.Command("cmd.exe")
 	cmd.SysProcAttr = &syscall.SysProcAttr{CmdLine: "/c " + command}
@@ -28,8 +21,8 @@ func ExecShell(command string) (outStr string, errStr string, err error) {
 
 	err = cmd.Run()
 
-	outStr = strings.Trim(ConvertByte2String(stdout.Bytes(), GBK), "\n")
-	errStr = strings.Trim(ConvertByte2String(stderr.Bytes(), GBK), "\n")
+	outStr = strings.Trim(ConvertByte2String(stdout.Bytes(), charset), "\n")
+	errStr = strings.Trim(ConvertByte2String(stderr.Bytes(), charset), "\n")
 	return
 }
 

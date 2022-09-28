@@ -50,9 +50,18 @@ var listCmd = &cobra.Command{
 				continue
 			}
 
-			command := fmt.Sprintf(preCmd, filepath.Join(localDir, repo))
+			log.InfoO(repo)
+
+			command := fmt.Sprintf("git -C %s remote -v", filepath.Join(localDir, repo))
+			remote, _ := util.GetOut(util.Execute(command))
+			log.InfoO(remote)
+
+			command = fmt.Sprintf(preCmd, filepath.Join(localDir, repo))
 			info, _ := util.GetOut(util.Execute(command))
-			log.InfoOf("%s\n%s\n", repo, info)
+			log.InfoO(info)
+
+			log.InfoO("")
+
 			result[repo] = OK
 		}
 		util.ExecStatistic("list", result)
