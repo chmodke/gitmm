@@ -31,12 +31,13 @@ package :
 	@echo "package"
 	@cp README.md ${BIN_DIR}
 	@cp repo.yaml ${BIN_DIR}
-	- @[ -f ${BUILD_NAME}.tar.gz ] && rm ${BUILD_NAME}.tar.gz
-	@cd ${BIN_DIR} && tar -czf ../${BUILD_NAME}.tar.gz *
+	- @find . -maxdepth 1 -type f -name "${BUILD_NAME}*.tar.gz" -exec rm -f {} \;
+	@cd ${BIN_DIR} && tar -czf ../${BUILD_NAME}-${BUILD_VERSION}-${BUILD_DATE}.tar.gz *
 
 clean:
 	@echo "clean"
 	@go clean
 	- @rm -rf ${BIN_DIR}
+	- @find . -maxdepth 1 -type f -name "${BUILD_NAME}*.tar.gz" -exec rm -f {} \;
 
 .PHONY: all test build_win install_win build_unix install_unix package clean
