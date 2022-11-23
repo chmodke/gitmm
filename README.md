@@ -74,10 +74,11 @@ git config --global credential.helper store
 配置文件 `repo.yaml` 用来配置主从仓库上游信息，示例内容如下：
 
 ```yaml
-# upstream from
-upstream: "git@gitee.com:chmodke"
-# origin to
-origin: "ssh://git@192.168.100.100:2222/chmodke"
+remote:
+  # upstream from
+  upstream: 'git@gitee.com:chmodke'
+  # origin to
+  origin: 'ssh://git@192.168.100.100:2222/chmodke'
 # repos repository list
 repos:
   - arpc
@@ -110,6 +111,7 @@ Available Commands:
   config      生成示例配置文件，校验配置文件
   create      批量创建分支
   help        Help about any command
+  list        展示工作路径下的Git仓库信息
   pull        批量拉取仓库
   remote      批量查看仓库远程信息
   switch      批量切换分支
@@ -154,6 +156,32 @@ gitmm config verify
 
 - 无参数
 
+### list
+
+> 遍历展示仓库最新提交记录
+
+执行命令会遍历`work_dir`目录下中的git仓库，展示仓库最新提交记录。
+
+#### 执行格式
+
+```shell
+Usage:
+  gitmm list [flags]
+
+Examples:
+gitmm list -w tmp
+
+Flags:
+  -h, --help                  help for list
+  -i, --invert-match string   仓库反向过滤条件，golang正则表达式
+  -n, --line-number int       日志行数 (default 1)
+  -m, --match string          仓库过滤条件，golang正则表达式
+  -w, --work_dir string       本地代码的存放路径 (default ".")
+
+Global Flags:
+  -x, --debug string   show more detail. (default "info")
+```
+
 ### clone
 
 > 批量克隆仓库
@@ -173,8 +201,10 @@ Flags:
   -h, --help                  help for clone
   -i, --invert-match string   仓库反向过滤条件，golang正则表达式
   -m, --match string          仓库过滤条件，golang正则表达式
+  -u, --remote string         克隆代码的远程名称 (default "origin")
   -b, --work_branch string    克隆代码的分支 (default "master")
   -w, --work_dir string       克隆代码的存放路径 (default "master")
+
 
 Global Flags:
   -x, --debug string   show more detail. (default "info")
@@ -185,8 +215,9 @@ gitmm clone -w tmp -b master
 
 #### 参数
 
-- work_dir: 必填项，克隆代码的存放路径
+- work_dir: 可选项，克隆代码的存放路径
 - work_branch: 可选项，克隆代码的分支，缺省值`master`
+- remote: 可选项，克隆代码的远程名称，缺省值`origin`
 - match: 可选项，仓库过滤条件，golang正则表达式，优先级高于`invert-match`
 - invert-match: 可选项，仓库反向过滤条件，golang正则表达式
 

@@ -1,5 +1,6 @@
-upstream: "git@gitee.com:chmodke"
-origin: "ssh://git@192.168.100.100:2222/chmodke"
+remote:
+  upstream: 'git@gitee.com:chmodke'
+  origin: 'ssh://git@192.168.100.100:2222/chmodke'
 repos:
   - arpc
   - ftrans

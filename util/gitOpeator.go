@@ -44,15 +44,16 @@ func PathExists(path string) bool {
 	return false
 }
 
-func GitClone(origin string, repo string, workDir string, workBranch string) bool {
+//GitClone is call git clone
+func GitClone(url string, repo string, remote string, workDir string, workBranch string) bool {
 	workPath, err := GetWorkDir(workDir)
 	if err != nil {
 		return false
 	}
 	localDir := filepath.Join(workPath, repo)
-	remoteAddr := fmt.Sprintf("%s/%s.git", origin, repo)
-	log.Infof("from %s clone %s.", origin, repo)
-	command := fmt.Sprintf("git clone -- %s %s", remoteAddr, localDir)
+	remoteAddr := fmt.Sprintf("%s/%s.git", url, repo)
+	log.Infof("from %s clone %s.", url, repo)
+	command := fmt.Sprintf("git clone -o %s -- %s %s", remote, remoteAddr, localDir)
 	ret := Out(Execute(command))
 	if !ret {
 		return ret
