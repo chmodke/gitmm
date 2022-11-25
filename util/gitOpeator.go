@@ -53,14 +53,19 @@ func GitClone(url string, repo string, remote string, workDir string, workBranch
 	localDir := filepath.Join(workPath, repo)
 	remoteAddr := fmt.Sprintf("%s/%s.git", url, repo)
 	log.Infof("from %s clone %s.", url, repo)
-	command := fmt.Sprintf("git clone -o %s -- %s %s", remote, remoteAddr, localDir)
-	ret := Out(Execute(command))
+	builder := &CmdBuilder{}
+	builder.Add("git").Add("clone")
+	builder.Add("-o").Add(remote).Add("--")
+	builder.Add(remoteAddr).Add(localDir)
+	ret := Out(Execute(builder.Build()))
 	if !ret {
 		return ret
 	}
 
-	command = fmt.Sprintf("git -C %s checkout %s", localDir, workBranch)
-	if !Status(Execute(command)) {
+	builder.Reset()
+	builder.Add("git").Add("-C").Add(localDir)
+	builder.Add("checkout").Add(workBranch)
+	if !Status(Execute(builder.Build())) {
 		log.Warnf("switch to %s fail.", workBranch)
 	}
 	return ret
@@ -88,58 +93,77 @@ func GitSync(upstream string, origin string, repo string, workDir string) bool {
 	}
 
 	log.Info("2.1 add upstream fetch url.")
-	command = fmt.Sprintf("git -C %s remote add upstream %s", localDir, upstreamRemote)
-	ret = Out(Execute(command))
+	builder := &CmdBuilder{}
+	builder.Add("git").Add("-C").Add(localDir)
+	builder.Add("remote").Add("add upstream").Add(upstreamRemote)
+	ret = Out(Execute(builder.Build()))
 	if !ret {
 		return ret
 	}
 
 	log.Info("2.2 fetch upstream all.")
-	command = fmt.Sprintf("git -C %s fetch --all --prune --tags", localDir)
-	ret = Out(Execute(command))
+	builder.Reset()
+	builder.Add("git").Add("-C").Add(localDir)
+	builder.Add("fetch").Add("--all --prune --tags")
+	ret = Out(Execute(builder.Build()))
 	if !ret {
 		return ret
 	}
 
-	command = fmt.Sprintf("git -C %s branch -r", localDir)
+	builder.Reset()
+	builder.Add("git").Add("-C").Add(localDir)
+	builder.Add("branch -r")
 	var out string
-	out, ret = GetOut(Execute(command))
+	out, ret = GetOut(Execute(builder.Build()))
 	if !ret {
 		return ret
 	}
 
 	log.Info("2.3 track all branch.")
+	builder.Reset()
+	builder.Add("git").Add("-C").Add(localDir)
+	builder.Add("branch -f")
+	builder.Add("--track %s").Add("upstream/%s")
+	tpl := builder.Build()
 	for _, s := range strings.Split(out, "\n") {
 		branchName, ok := getBranchName(s)
 		if ok {
-			command = fmt.Sprintf("git -C %s branch -f --track %s upstream/%s", localDir, branchName, branchName)
+			command = fmt.Sprintf(tpl, branchName, branchName)
 			ret = Out(Execute(command))
 		}
 	}
 
 	log.Info("2.4 remove upstream fetch url.")
-	command = fmt.Sprintf("git -C %s remote remove upstream", localDir)
-	ret = Out(Execute(command))
+	builder.Reset()
+	builder.Add("git").Add("-C").Add(localDir)
+	builder.Add("remote").Add("remove upstream")
+	ret = Out(Execute(builder.Build()))
 	if !ret {
 		return ret
 	}
 
 	log.Info("3.1 add origin url.")
-	command = fmt.Sprintf("git -C %s remote add origin %s", localDir, originRemote)
-	ret = Out(Execute(command))
+	builder.Reset()
+	builder.Add("git").Add("-C").Add(localDir)
+	builder.Add("remote").Add("add origin").Add(originRemote)
+	ret = Out(Execute(builder.Build()))
 	if !ret {
 		return ret
 	}
 
 	log.Info("3.2 push origin all.")
-	command = fmt.Sprintf("git -C %s push origin --all -f", localDir)
-	ret = Out(Execute(command))
+	builder.Reset()
+	builder.Add("git").Add("-C").Add(localDir)
+	builder.Add("push").Add("origin --all -f")
+	ret = Out(Execute(builder.Build()))
 	if !ret {
 		return ret
 	}
 
-	command = fmt.Sprintf("git -C %s push origin --tags -f", localDir)
-	ret = Out(Execute(command))
+	builder.Reset()
+	builder.Add("git").Add("-C").Add(localDir)
+	builder.Add("push").Add("origin --tags -f")
+	ret = Out(Execute(builder.Build()))
 	return ret
 }
 
@@ -193,78 +217,99 @@ func isGit(dirPth string) bool {
 }
 
 func GitPull(localRepo string, force bool) bool {
-	var command string
+	builder := &CmdBuilder{}
+	builder.Add("git").Add("-C").Add(localRepo)
+	builder.Add("symbolic-ref --short HEAD")
+	branch, ret := GetOut(Execute(builder.Build()))
 
-	command = fmt.Sprintf("git -C %s symbolic-ref --short HEAD", localRepo)
-	branch, ret := GetOut(Execute(command))
-
-	command = fmt.Sprintf("git -C %s fetch --all -v", localRepo)
-	ret = Out(Execute(command))
+	builder.Reset()
+	builder.Add("git").Add("-C").Add(localRepo)
+	builder.Add("fetch --all -v")
+	ret = Out(Execute(builder.Build()))
 	if force {
-		command = fmt.Sprintf("git -C %s reset --hard refs/remotes/origin/%s", localRepo, branch)
-		ret = Out(Execute(command))
+		builder.Reset()
+		builder.Add("git").Add("-C").Add(localRepo)
+		builder.Add("reset --hard")
+		builder.AddWithArg("refs/remotes/origin/%s", branch)
+		ret = Out(Execute(builder.Build()))
 	}
-	command = fmt.Sprintf("git -C %s pull --all -v", localRepo)
-	ret = Out(Execute(command))
+	builder.Reset()
+	builder.Add("git").Add("-C").Add(localRepo)
+	builder.Add("pull --all -v")
+	ret = Out(Execute(builder.Build()))
 	return ret
 }
 
 func GitRemote(localRepo string) bool {
-	var command string
-
-	command = fmt.Sprintf("git -C %s remote -v", localRepo)
-	out, ret := GetOut(Execute(command))
+	builder := &CmdBuilder{}
+	builder.Add("git").Add("-C").Add(localRepo)
+	builder.Add("remote -v")
+	out, ret := GetOut(Execute(builder.Build()))
 	log.InfoO(out)
 
-	command = fmt.Sprintf("git -C %s symbolic-ref --short HEAD", localRepo)
-	branch, ret := GetOut(Execute(command))
+	builder.Reset()
+	builder.Add("git").Add("-C").Add(localRepo)
+	builder.Add("symbolic-ref --short HEAD")
+	branch, ret := GetOut(Execute(builder.Build()))
 	log.Infof("current branch %s", branch)
 
 	return ret
 }
 
 func GitCreateBranch(localRepo, newBranch, startPoint string) bool {
-	var command string
+	builder := &CmdBuilder{}
+	builder.Add("git").Add("-C").Add(localRepo)
+	builder.Add("branch").Add(newBranch).Add(startPoint)
+	ret := Out(Execute(builder.Build()))
 
-	command = fmt.Sprintf("git -C %s branch %s %s", localRepo, newBranch, startPoint)
-	ret := Out(Execute(command))
-
-	command = fmt.Sprintf("git -C %s symbolic-ref --short HEAD", localRepo)
-	branch, ret := GetOut(Execute(command))
+	builder.Reset()
+	builder.Add("git").Add("-C").Add(localRepo)
+	builder.Add("symbolic-ref --short HEAD")
+	branch, ret := GetOut(Execute(builder.Build()))
 	log.Infof("current branch %s", branch)
 	return ret
 }
 
 func GitSwitchBranch(localRepo, aimBranch string, force bool) bool {
-	var command string
-
-	command = fmt.Sprintf("git -C %s symbolic-ref --short HEAD", localRepo)
-	curBranch, ret := GetOut(Execute(command))
+	builder := &CmdBuilder{}
+	builder.Add("git").Add("-C").Add(localRepo)
+	builder.Add("symbolic-ref --short HEAD")
+	curBranch, ret := GetOut(Execute(builder.Build()))
 	log.Infof("before switch branch %s", curBranch)
 
 	if force {
-		command = fmt.Sprintf("git -C %s clean -df", localRepo)
-		ret = Out(Execute(command))
-		command = fmt.Sprintf("git -C %s reset --hard", localRepo)
-		ret = Out(Execute(command))
-		command = fmt.Sprintf("git -C %s fetch --all", localRepo)
-		ret = Out(Execute(command))
+		builder.Reset()
+		builder.Add("git").Add("-C").Add(localRepo)
+		builder.Add("clean -df")
+		ret = Out(Execute(builder.Build()))
+		builder.Reset()
+		builder.Add("git").Add("-C").Add(localRepo)
+		builder.Add("reset --hard")
+		ret = Out(Execute(builder.Build()))
+		builder.Reset()
+		builder.Add("git").Add("-C").Add(localRepo)
+		builder.Add("fetch --all")
+		ret = Out(Execute(builder.Build()))
 	}
 
-	command = fmt.Sprintf("git -C %s checkout %s", localRepo, aimBranch)
-	ret = Out(Execute(command))
+	builder.Reset()
+	builder.Add("git").Add("-C").Add(localRepo)
+	builder.Add("checkout").Add(aimBranch)
+	ret = Out(Execute(builder.Build()))
 
-	command = fmt.Sprintf("git -C %s symbolic-ref --short HEAD", localRepo)
-	curBranch, ret = GetOut(Execute(command))
+	builder.Reset()
+	builder.Add("git").Add("-C").Add(localRepo)
+	builder.Add("symbolic-ref --short HEAD")
+	curBranch, ret = GetOut(Execute(builder.Build()))
 	log.Infof("after switch branch %s", curBranch)
 	return ret
 }
 
 func GitCommand(localRepo, gitCommand string) bool {
-	var command string
-
-	command = fmt.Sprintf("git -C %s %s", localRepo, gitCommand)
-	out, ret := GetOut(Execute(command))
+	builder := &CmdBuilder{}
+	builder.Add("git").Add("-C").Add(localRepo)
+	builder.Add(gitCommand)
+	out, ret := GetOut(Execute(builder.Build()))
 	log.InfoO(out)
 	return ret
 }
