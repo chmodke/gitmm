@@ -7,6 +7,7 @@ import (
 	"gitmm/config"
 	"gitmm/log"
 	"gitmm/util"
+	"os"
 )
 
 var cloneCmd = &cobra.Command{
@@ -16,17 +17,26 @@ var cloneCmd = &cobra.Command{
 	Example: "gitmm clone -w tmp -b master",
 	Run: func(cmd *cobra.Command, args []string) {
 		config.LoadCfg()
-		log.Debugf("origin: %s", config.Origin)
-		log.Debugf("repos: %s", config.Repos)
 
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		log.Debugf("work_dir: %s", workDir)
 		workBranch, _ := cmd.Flags().GetString("work_branch")
 		log.Debugf("work_branch: %s", workBranch)
+		remote, _ := cmd.Flags().GetString("remote")
+		log.Debugf("remote: %s", remote)
 		match, _ := cmd.Flags().GetString("match")
 		log.Debugf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
 		log.Debugf("invert: %s", invert)
+
+		url, ok := config.Remote[remote]
+		if !ok {
+			fmt.Printf("未配置%s远端地址\n", remote)
+			os.Exit(1)
+		}
+
+		log.Debugf("remote-url: %s", url)
+		log.Debugf("repos: %s", config.Repos)
 
 		result := make(map[string]string)
 		for _, repo := range config.Repos {
@@ -36,7 +46,7 @@ var cloneCmd = &cobra.Command{
 				continue
 			}
 			log.Info(util.LeftAlign(fmt.Sprintf("start clone %s.", repo), 2, "-"))
-			ok := util.GitClone(config.Origin, repo, workDir, workBranch)
+			ok := util.GitClone(url, repo, remote, workDir, workBranch)
 			if ok {
 				log.Info(util.LeftAlign(fmt.Sprintf("clone %s done.\n", repo), 2, "-"))
 				result[repo] = OK
@@ -53,8 +63,8 @@ func init() {
 	rootCmd.AddCommand(cloneCmd)
 
 	cloneCmd.Flags().StringP("work_dir", "w", "master", "克隆代码的存放路径")
-	cloneCmd.MarkFlagRequired("work_dir")
 	cloneCmd.Flags().StringP("work_branch", "b", "master", "克隆代码的分支")
+	cloneCmd.Flags().StringP("remote", "u", "origin", "克隆代码的远程名称")
 	cloneCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
 	cloneCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
 }
