@@ -7,7 +7,9 @@
 ### 编译
 
 ```shell
-make clean build_win install_win build_unix package
+make clean build_win install_win build_linux package
+# release
+make clean build_win install_win build_linux package release BUILD_MODE=release BUILD_VERSION=1.1.0
 ```
 
 ### 安装

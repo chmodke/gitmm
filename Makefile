@@ -48,7 +48,8 @@ ifneq ($(BUILD_MODE),release)
 	@echo "currently started in snapshot mode"
 else
 	@echo "${BUILD_VERSION} will be released"
-#	@git tag -a ${BUILD_VERSION}
+	@git tag ${BUILD_VERSION}
+	@git push --tag
 endif
 
 clean:
