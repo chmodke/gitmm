@@ -8,7 +8,6 @@ import (
 	"gitmm/util"
 	"path/filepath"
 	"strconv"
-	"strings"
 )
 
 // listCmd represents the batch command
@@ -38,14 +37,14 @@ var listCmd = &cobra.Command{
 			log.Error("获取本地仓库失败")
 		}
 
-		var commands []string
-		commands = append(commands, "git")
-		commands = append(commands, "-C %s")
-		commands = append(commands, "log")
-		commands = append(commands, "-n"+strconv.Itoa(lineNumber))
-		commands = append(commands, "--pretty=\"format:%%ad %%h %%d %%n%%s%%n\"")
-		commands = append(commands, "--date=iso")
-		preCmd := strings.Join(commands, " ")
+		builder := &util.CmdBuilder{}
+		builder.Add("git")
+		builder.Add("-C %s")
+		builder.Add("log")
+		builder.Add("-n" + strconv.Itoa(lineNumber))
+		builder.Add("--pretty=\"format:%%ad %%h %%d %%n%%s%%n\"")
+		builder.Add("--date=iso")
+		preCmd := builder.Build()
 
 		result := make(map[string]string)
 		for _, repo := range repos {

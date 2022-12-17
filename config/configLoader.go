@@ -9,6 +9,7 @@ import (
 var viperConfig *viper.Viper
 
 var (
+	Remote   map[string]string
 	Origin   string
 	Upstream string
 	Repos    []string
@@ -42,15 +43,23 @@ func LoadCfg() {
 		fmt.Println("可以执行`gitmm config`命令生成示例配置文件。")
 		os.Exit(1)
 	}
-	Origin = viperConfig.GetString("origin")
-	Upstream = viperConfig.GetString("upstream")
+	Remote = viperConfig.GetStringMapString("remote")
+	var ok = false
+	if Origin, ok = Remote["origin"]; !ok {
+		fmt.Println("未配置origin远端地址")
+		os.Exit(1)
+	}
+	if Upstream, ok = Remote["upstream"]; !ok {
+		fmt.Println("未配置upstream远端地址")
+		os.Exit(1)
+	}
 	Repos = viperConfig.GetStringSlice("repos")
 }
 
 func WriteCfg() {
 	sample := viper.New()
-	sample.Set("upstream", "git@gitee.com:chmodke")
-	sample.Set("origin", "git@github.com:chmodke")
+	remote := map[string]string{"upstream": "git@gitee.com:chmodke", "origin": "git@github.com:chmodke"}
+	sample.Set("remote", remote)
 	sample.Set("repos", []string{"arpc", "ftrans"})
 
 	sample.WriteConfigAs("repo_sample.yaml")
