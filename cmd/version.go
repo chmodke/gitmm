@@ -3,6 +3,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/shirou/gopsutil/v3/host"
 	"github.com/spf13/cobra"
 	"gitmm/util"
 	"os"
@@ -23,7 +24,9 @@ var versionCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("gitmm version %s\n", VERSION)
 		fmt.Println(GetGitVersion())
-		fmt.Printf("%s %s\n", runtime.GOOS, runtime.GOARCH)
+		platform, _, version, _ := host.PlatformInformation()
+		kernelArch, _ := host.KernelArch()
+		fmt.Printf("%s %s %s\n", platform, version, kernelArch)
 		fmt.Printf("Report Bug: <%s>\n", "https://gitee.com/chmodke/gitmm.git")
 	},
 }
