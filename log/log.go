@@ -3,7 +3,6 @@ package log
 import (
 	"fmt"
 	"strings"
-	"time"
 )
 
 var level = INFO
@@ -12,7 +11,7 @@ var logLevelMap = make(map[int8]string)
 var logNameMap = make(map[string]int8)
 
 const (
-	GlobalFmt       = "%s %5s %s\n"
+	GlobalFmt       = "%5s %s\n"
 	DateFormat      = "2006-01-02 15:04:05.000"
 	DEBUG      int8 = 1
 	INFO       int8 = 3
@@ -138,7 +137,7 @@ func ErrorOf(template string, args ...interface{}) {
 }
 
 func write(level int8, msg string) {
-	fmt.Printf(GlobalFmt, time.Now().Format(DateFormat), logLevelMap[level], msg)
+	fmt.Printf(GlobalFmt, logLevelMap[level], msg)
 }
 
 func out(msg string) {

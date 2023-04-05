@@ -7,10 +7,14 @@ import (
 	"gitmm/log"
 	"gitmm/util"
 	"path/filepath"
-	"strconv"
+	"strings"
 )
 
 // listCmd represents the batch command
+// name
+// status(A D M ?) git status --porcelain
+// branch(git branch -l $(git branch --show-current) -v --format='%(upstream)') //%(upstream:remotename)
+// lastcommit(git log -n1 --pretty="format:%ad %an" --date=iso)
 var listCmd = &cobra.Command{
 	Use:     "list",
 	Short:   "展示工作路径下的Git仓库信息",
@@ -37,39 +41,38 @@ var listCmd = &cobra.Command{
 			log.Error("获取本地仓库失败")
 		}
 
-		builder := &util.CmdBuilder{}
-		builder.Add("git")
-		builder.Add("-C %s")
-		builder.Add("log")
-		builder.Add("-n" + strconv.Itoa(lineNumber))
-		builder.Add("--pretty=\"format:%%ad %%h %%d %%n%%s%%n\"")
-		builder.Add("--date=iso")
-		preCmd := builder.Build()
-
-		result := make(map[string]string)
+		printHead()
 		for _, repo := range repos {
 			if !util.Match(repo, match, invert) {
-				result[repo] = SKIP
 				continue
 			}
 
-			log.InfoO(repo)
-
-			command := fmt.Sprintf("git -C %s remote -v", filepath.Join(localDir, repo))
-			remote, _ := util.GetOut(util.Execute(command))
-			log.InfoO(remote)
-
-			command = fmt.Sprintf(preCmd, filepath.Join(localDir, repo))
-			info, _ := util.GetOut(util.Execute(command))
-			log.InfoO(info)
-
-			log.InfoO("")
-
-			result[repo] = OK
+			repoPath := filepath.Join(localDir, repo)
+			status := util.GitStatusStatistic(repoPath)
+			branchName := util.GitCurrentBranch(repoPath)
+			branchTrack := util.GitBranchTrack(repoPath, branchName)
+			lastCommit := util.GitLastCommit(repoPath)
+			printStatus(repo, branchName, branchTrack, lastCommit, status)
 		}
-		util.ExecStatistic("list", result)
 		return nil
 	},
+}
+
+func printHead() {
+	fmt.Printf("%-15s  %-15s  %-12s  %-33s  %-34s\n", "Repo", "BranchName", "TrackTo", "LastCommit", "Status")
+	fmt.Printf(strings.Repeat("-", 16) + "+" + strings.Repeat("-", 16) + "+" + strings.Repeat("-", 13) + "+" + strings.Repeat("-", 34) + "+" + strings.Repeat("-", 34) + "\n")
+}
+
+func printStatus(repo, branchName, branchTrack, lastCommit string, status map[string]int) {
+	statusLine := ""
+	if len(status) > 0 {
+		for k, v := range status {
+			statusLine += fmt.Sprintf("%s-%d ", k, v)
+		}
+	} else {
+		statusLine = "clean"
+	}
+	fmt.Printf("%-15s  %-15s  %-12s  %-33s  %-34s\n", repo, branchName, branchTrack, lastCommit, statusLine)
 }
 
 func init() {

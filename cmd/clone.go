@@ -38,24 +38,20 @@ var cloneCmd = &cobra.Command{
 		log.Debugf("remote-url: %s", url)
 		log.Debugf("repos: %s", config.Repos)
 
-		result := make(map[string]string)
 		for _, repo := range config.Repos {
+			var process util.Progress
+			process.NewOption(repo, 0, 2)
 			if !util.Match(repo, match, invert) {
-				log.Info(util.LeftAlign(fmt.Sprintf("skip clone %s.\n", repo), 2, "-"))
-				result[repo] = SKIP
+				process.Finish(SKIP)
 				continue
 			}
-			log.Info(util.LeftAlign(fmt.Sprintf("start clone %s.", repo), 2, "-"))
-			ok := util.GitClone(url, repo, remote, workDir, workBranch)
+			ok := util.GitClone(url, repo, remote, workDir, workBranch, &process)
 			if ok {
-				log.Info(util.LeftAlign(fmt.Sprintf("clone %s done.\n", repo), 2, "-"))
-				result[repo] = OK
+				process.Finish(OK)
 			} else {
-				log.Error(util.LeftAlign(fmt.Sprintf("clone %s fail.\n", repo), 2, "-"))
-				result[repo] = FAIL
+				process.Finish(FAIL)
 			}
 		}
-		util.ExecStatistic("clone", result)
 	},
 }
 
