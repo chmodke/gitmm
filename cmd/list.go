@@ -59,8 +59,8 @@ var listCmd = &cobra.Command{
 }
 
 func printHead() {
-	fmt.Printf("%-15s  %-15s  %-12s  %-33s  %-34s\n", "Repo", "BranchName", "TrackTo", "LastCommit", "Status")
-	fmt.Printf(strings.Repeat("-", 16) + "+" + strings.Repeat("-", 16) + "+" + strings.Repeat("-", 13) + "+" + strings.Repeat("-", 34) + "+" + strings.Repeat("-", 34) + "\n")
+	fmt.Printf("%-16s  %-16s  %-12s  %-34s  %-34s\n", "Repo", "BranchName", "TrackTo", "LastCommit", "Status")
+	fmt.Printf(strings.Repeat("-", 17) + "+" + strings.Repeat("-", 17) + "+" + strings.Repeat("-", 13) + "+" + strings.Repeat("-", 35) + "+" + strings.Repeat("-", 34) + "\n")
 }
 
 func printStatus(repo, branchName, branchTrack, lastCommit string, status map[string]int) {
@@ -72,7 +72,7 @@ func printStatus(repo, branchName, branchTrack, lastCommit string, status map[st
 	} else {
 		statusLine = "clean"
 	}
-	fmt.Printf("%-15s  %-15s  %-12s  %-33s  %-34s\n", repo, branchName, branchTrack, lastCommit, statusLine)
+	fmt.Printf("%-16s  %-16s  %-12s  %-34s  %-34s\n", util.RightCut(repo, 16), util.LeftCut(branchName, 16), util.LeftCut(branchTrack, 13), util.LeftCut(lastCommit, 34), statusLine)
 }
 
 func init() {

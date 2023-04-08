@@ -344,6 +344,25 @@ func GitCurrentBranch(localRepo string) string {
 	builder.Add("--show-current")
 
 	out, _ := GetOut(Execute(builder.Build()))
+
+	if len(out) == 0 {
+		builder.Reset()
+		builder.Add("git")
+		builder.AddWithArg("-C %s", localRepo)
+		builder.Add("tag")
+		builder.Add("--points-at HEAD")
+
+		out, _ = GetOut(Execute(builder.Build()))
+	}
+	if len(out) == 0 {
+		builder.Reset()
+		builder.Add("git")
+		builder.AddWithArg("-C %s", localRepo)
+		builder.Add("rev-parse")
+		builder.Add("--short HEAD")
+
+		out, _ = GetOut(Execute(builder.Build()))
+	}
 	return out
 }
 

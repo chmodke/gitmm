@@ -1,7 +1,7 @@
 BUILD_NAME:=gitmm
 BIN_DIR:=bin
 BUILD_MODE?=snapshot
-BUILD_VERSION?=1.2.0
+BUILD_VERSION?=1.2.0-alpha
 BUILD_DATE:=$(shell date '+%Y%m%d.%H%M%S')
 SOURCE:=*.go
 
