@@ -2,7 +2,6 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"gitmm/log"
 	"gitmm/util"
@@ -36,24 +35,20 @@ var createCmd = &cobra.Command{
 		if err != nil {
 			log.Error("获取本地仓库失败")
 		}
-		result := make(map[string]string)
 		for _, repo := range repos {
+			var process util.Progress
+			process.NewOption(util.RightCut(repo, 18), 0, 1)
 			if !util.Match(repo, match, invert) {
-				log.Info(util.LeftAlign(fmt.Sprintf("skip create branch at %s.\n", repo), 2, "-"))
-				result[repo] = SKIP
+				process.Finish(SKIP)
 				continue
 			}
-			log.Info(util.LeftAlign(fmt.Sprintf("start create branch at %s.", repo), 2, "-"))
-			ok := util.GitCreateBranch(filepath.Join(localDir, repo), newBranch, startPoint)
+			ok := util.GitCreateBranch(filepath.Join(localDir, repo), newBranch, startPoint, &process)
 			if ok {
-				log.Info(util.LeftAlign(fmt.Sprintf("%s create branch done.\n", repo), 2, "-"))
-				result[repo] = OK
+				process.Finish(OK)
 			} else {
-				log.Error(util.LeftAlign(fmt.Sprintf("%s create branch fail.\n", repo), 2, "-"))
-				result[repo] = FAIL
+				process.Finish(FAIL)
 			}
 		}
-		util.ExecStatistic("create", result)
 	},
 }
 

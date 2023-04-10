@@ -68,3 +68,34 @@ func RandCreator(l int) string {
 	}
 	return string(result)
 }
+
+func RightCut(str string, l int) string {
+	if l <= 0 {
+		return ""
+	}
+	if len(str) <= l {
+		return str
+	}
+	return str[:l-2] + ".."
+}
+
+func LeftCut(str string, l int) string {
+	if l <= 0 {
+		return ""
+	}
+	if len(str) <= l {
+		return str
+	}
+	start := len(str) - l + 2
+	return ".." + str[start:]
+}
+
+func MaxLen(arr []string) int {
+	max := 0
+	for _, a := range arr {
+		if len(a) > max {
+			max = len(a)
+		}
+	}
+	return max
+}
