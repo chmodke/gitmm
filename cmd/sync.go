@@ -27,25 +27,23 @@ var syncCmd = &cobra.Command{
 		invert, _ := cmd.Flags().GetString("invert-match")
 		log.Debugf("invert: %s", invert)
 
+		log.Infof("sync repo from %s to %s.", config.Upstream, config.Origin)
+
 		tmp := fmt.Sprintf("_%s_", util.RandCreator(8))
-		result := make(map[string]string)
 		for _, repo := range config.Repos {
+			var process util.Progress
+			process.NewOption(util.RightCut(repo, 18), 0, 9)
 			if !util.Match(repo, match, invert) {
-				log.Info(util.LeftAlign(fmt.Sprintf("skip %s sync.\n", repo), 2, "-"))
-				result[repo] = SKIP
+				process.Finish(SKIP)
 				continue
 			}
-			log.Info(util.LeftAlign(fmt.Sprintf("start %s sync.", repo), 2, "-"))
-			ok := util.GitSync(config.Upstream, config.Origin, repo, tmp)
+			ok := util.GitSync(config.Upstream, config.Origin, repo, tmp, &process)
 			if ok {
-				log.Info(util.LeftAlign(fmt.Sprintf("sync %s done.\n", repo), 2, "-"))
-				result[repo] = OK
+				process.Finish(OK)
 			} else {
-				log.Error(util.LeftAlign(fmt.Sprintf("sync %s fail.\n", repo), 2, "-"))
-				result[repo] = FAIL
+				process.Finish(FAIL)
 			}
 		}
-		util.ExecStatistic("sync", result)
 		os.RemoveAll(tmp)
 	},
 }

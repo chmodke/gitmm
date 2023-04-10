@@ -1,8 +1,6 @@
 package util
 
-import (
-	"gitmm/log"
-)
+import "gitmm/log"
 
 type Charset string
 
@@ -20,31 +18,27 @@ func ExecuteWithCharset(command string, charset Charset) (outStr string, errStr 
 
 func Status(stdout string, stderr string, err error) bool {
 	if err != nil {
+		log.Debug(stderr)
 		return false
 	} else {
-		return true
-	}
-}
-
-func Out(stdout string, stderr string, err error) bool {
-	if err != nil {
-		log.Error("execute fail")
-		log.Error(stderr)
-		return false
-	} else {
-		log.Debug("execute succeed")
-		log.Debug(stdout)
 		return true
 	}
 }
 
 func GetOut(stdout string, stderr string, err error) (string, bool) {
 	if err != nil {
-		log.Error("execute fail")
-		log.Error(stderr)
+		log.Debug(stderr)
 		return "", false
 	} else {
-		log.Debug("execute succeed")
 		return stdout, true
+	}
+}
+
+func GetErr(stdout string, stderr string, err error) (string, string, bool) {
+	if err != nil {
+		log.Debug(stderr)
+		return "", stderr, false
+	} else {
+		return stdout, "", true
 	}
 }
