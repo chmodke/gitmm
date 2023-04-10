@@ -32,7 +32,7 @@ var syncCmd = &cobra.Command{
 		tmp := fmt.Sprintf("_%s_", util.RandCreator(8))
 		for _, repo := range config.Repos {
 			var process util.Progress
-			process.NewOption(repo, 0, 9)
+			process.NewOption(util.RightCut(repo, 18), 0, 9)
 			if !util.Match(repo, match, invert) {
 				process.Finish(SKIP)
 				continue

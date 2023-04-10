@@ -40,7 +40,7 @@ var cloneCmd = &cobra.Command{
 
 		for _, repo := range config.Repos {
 			var process util.Progress
-			process.NewOption(repo, 0, 2)
+			process.NewOption(util.RightCut(repo, 18), 0, 2)
 			if !util.Match(repo, match, invert) {
 				process.Finish(SKIP)
 				continue

@@ -37,7 +37,7 @@ var createCmd = &cobra.Command{
 		}
 		for _, repo := range repos {
 			var process util.Progress
-			process.NewOption(repo, 0, 1)
+			process.NewOption(util.RightCut(repo, 18), 0, 1)
 			if !util.Match(repo, match, invert) {
 				process.Finish(SKIP)
 				continue
