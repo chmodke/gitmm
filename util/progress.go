@@ -44,12 +44,11 @@ func (p *Progress) Play(cur int) {
 	p.current = cur
 	p.percent = p.getPercent()
 	p.rate = strings.Repeat(p.graph, p.percent/2)
-	fmt.Printf("\r%s[%-50s]%3d%%  %8d/%d", p.name, p.rate, p.percent, p.current, p.total)
+	fmt.Printf("\r%s[%-50s]%4d/%d", p.name, p.rate, p.current, p.total)
 }
 
 func (p *Progress) Finish(status string) {
-	fmt.Printf("\r%s[%-50s]%3d%%  %8d/%d  %8s", p.name, p.rate, p.percent, p.current, p.total, status)
-	fmt.Printf("\n")
+	fmt.Printf("\r%s[%-50s]%4d/%d%8s\n", p.name, p.rate, p.current, p.total, status)
 }
 
 func (p *Progress) getPercent() int {
