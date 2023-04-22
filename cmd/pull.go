@@ -16,22 +16,22 @@ var pullCmd = &cobra.Command{
 	Example: "gitmm pull -w tmp",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		log.Debugf("work_dir: %s", workDir)
+		log.Printf("work_dir: %s", workDir)
 		force, _ := cmd.Flags().GetBool("force")
-		log.Debugf("force: %s", force)
+		log.Printf("force: %t", force)
 		match, _ := cmd.Flags().GetString("match")
-		log.Debugf("match: %s", match)
+		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Debugf("invert: %s", invert)
+		log.Printf("invert: %s", invert)
 
 		localDir, err := util.GetWorkDir(workDir)
 		if err != nil {
-			log.Error("获取工作路径失败")
+			log.Consoleln("获取工作路径失败")
 			return
 		}
 		repos, err := util.FindGit(localDir)
 		if err != nil {
-			log.Error("获取本地仓库失败")
+			log.Consoleln("获取本地仓库失败")
 		}
 		for _, repo := range repos {
 			var process util.Progress

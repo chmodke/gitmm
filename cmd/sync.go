@@ -18,16 +18,16 @@ var syncCmd = &cobra.Command{
 	Example: "gitmm sync",
 	Run: func(cmd *cobra.Command, args []string) {
 		config.LoadCfg()
-		log.Debugf("upstream: %s", config.Upstream)
-		log.Debugf("origin: %s", config.Origin)
-		log.Debugf("repos: %s", config.Repos)
+		log.Printf("upstream: %s", config.Upstream)
+		log.Printf("origin: %s", config.Origin)
+		log.Printf("repos: %s", config.Repos)
 
 		match, _ := cmd.Flags().GetString("match")
-		log.Debugf("match: %s", match)
+		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Debugf("invert: %s", invert)
+		log.Printf("invert: %s", invert)
 
-		log.Infof("sync repo from %s to %s.", config.Upstream, config.Origin)
+		log.Consolef("sync repo from %s to %s.", config.Upstream, config.Origin)
 
 		tmp := fmt.Sprintf("_%s_", util.RandCreator(8))
 		for _, repo := range config.Repos {

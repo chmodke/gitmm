@@ -94,10 +94,6 @@ repos:
 
 <font style="color:red">注意：`upstream` ：是主仓库上游地址，`origin` 是从仓库上游地址，一定不能配反了。</font>
 
-## 全局选项
-
-- -x: --debug，控制显示详细的执行细节，取值范围debug/info/warn/error或者d/i/w/e，默认值info
-
 ## 子命令说明
 
 > 所有子命令都支持`-h`或`--help` 参数查看帮助。
@@ -121,7 +117,6 @@ Available Commands:
   version     Show tool version
 
 Flags:
-  -x, --debug string   show more detail. (default "info")
   -h, --help           help for gitmm
   -v, --version        show tool version.
 
@@ -148,8 +143,6 @@ Available Commands:
 Flags:
   -h, --help   help for config
 
-Global Flags:
-  -x, --debug string   show more detail. (default "info")
 # 示例，校验配置文件
 gitmm config verify
 ```
@@ -180,8 +173,6 @@ Flags:
   -m, --match string          仓库过滤条件，golang正则表达式
   -w, --work_dir string       本地代码的存放路径 (default ".")
 
-Global Flags:
-  -x, --debug string   show more detail. (default "info")
 ```
 
 ### clone
@@ -207,10 +198,6 @@ Flags:
   -b, --work_branch string    克隆代码的分支 (default "master")
   -w, --work_dir string       克隆代码的存放路径 (default "master")
 
-
-Global Flags:
-  -x, --debug string   show more detail. (default "info")
-
 # 示例：下面将克隆仓库的master分支到本地tmp目录中
 gitmm clone -w tmp -b master
 ```
@@ -227,7 +214,8 @@ gitmm clone -w tmp -b master
 
 > 批量同步主从仓库
 
-执行命令会读取当前目录下`repo.yaml`配置文件，遍历`repos`配置项，从`upstream`强制同步全部内容到`origin`中，需要用户对`origin`有强制写权限（取消分支保护）。
+执行命令会读取当前目录下`repo.yaml`配置文件，遍历`repos`配置项，从`upstream`强制同步全部内容到`origin`
+中，需要用户对`origin`有强制写权限（取消分支保护）。
 
 <font style="color:red">注意：会强制以 `upstream` 中的内容覆盖 `origin` 中的内容。</font>
 
@@ -245,8 +233,6 @@ Flags:
   -i, --invert-match string   仓库反向过滤条件，golang正则表达式
   -m, --match string          仓库过滤条件，golang正则表达式
 
-Global Flags:
-  -x, --debug string   show more detail. (default "info")
 ```
 
 #### 参数
@@ -276,8 +262,6 @@ Flags:
   -m, --match string          仓库过滤条件，golang正则表达式
   -w, --work_dir string       本地代码的存放路径 (default ".")
 
-Global Flags:
-  -x, --debug string   show more detail. (default "info")
 # 示例：下面拉取当前目录下tmp文件夹中所有仓库的最新代码
 gitmm pull -w tmp
 ```
@@ -312,8 +296,6 @@ Flags:
   -r, --refs string           新分支起点 (default "HEAD")
   -w, --work_dir string       本地代码的存放路径 (default ".")
 
-Global Flags:
-  -x, --debug string   show more detail. (default "info")
 # 示例：下面将对当前目录下tmp文件夹中所有仓库基于当前节点创建develop分支
 gitmm create -w tmp -b develop
 ```
@@ -349,8 +331,6 @@ Flags:
   -m, --match string          仓库过滤条件，golang正则表达式
   -w, --work_dir string       本地代码的存放路径 (default ".")
 
-Global Flags:
-  -x, --debug string   show more detail. (default "info")
 # 示例：下面将切换当前目录下tmp文件夹中所有仓库到develop分支
 gitmm switch -w tmp -b develop
 ```
@@ -384,8 +364,6 @@ Flags:
   -m, --match string          仓库过滤条件，golang正则表达式
   -w, --work_dir string       本地代码的存放路径 (default ".")
 
-Global Flags:
-  -x, --debug string   show more detail. (default "info")
 # 示例：下面将查看当前目录下master文件夹中所有仓库的远程信息
 gitmm remote -w tmp
 ```
@@ -417,8 +395,6 @@ Flags:
   -m, --match string          仓库过滤条件，golang正则表达式
   -w, --work_dir string       本地代码的存放路径 (default ".")
 
-Global Flags:
-  -x, --debug string   show more detail. (default "info")
 # 示例：下面将查看当前目录下tmp文件夹中所有仓库最新一条提交记录
 gitmm batch -w tmp 'log --oneline -n1'
 ```

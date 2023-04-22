@@ -18,7 +18,7 @@ func ExecuteWithCharset(command string, charset Charset) (outStr string, errStr 
 
 func Status(stdout string, stderr string, err error) bool {
 	if err != nil {
-		log.Debug(stderr)
+		log.Println(stderr)
 		return false
 	} else {
 		return true
@@ -27,7 +27,7 @@ func Status(stdout string, stderr string, err error) bool {
 
 func GetOut(stdout string, stderr string, err error) (string, bool) {
 	if err != nil {
-		log.Debug(stderr)
+		log.Println(stderr)
 		return "", false
 	} else {
 		return stdout, true
@@ -36,7 +36,7 @@ func GetOut(stdout string, stderr string, err error) (string, bool) {
 
 func GetErr(stdout string, stderr string, err error) (string, string, bool) {
 	if err != nil {
-		log.Debug(stderr)
+		log.Println(stderr)
 		return "", stderr, false
 	} else {
 		return stdout, "", true

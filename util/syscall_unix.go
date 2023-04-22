@@ -10,7 +10,7 @@ import (
 )
 
 func ExecShell(command string, charset Charset) (outStr string, errStr string, err error) {
-	log.Debugf("command: %s", command)
+	log.Printf("command: %s", command)
 	var cmd = exec.Command("/bin/bash", "-c", command)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout

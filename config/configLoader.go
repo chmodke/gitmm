@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"github.com/spf13/viper"
+	"gitmm/log"
 	"os"
 )
 
@@ -39,18 +40,18 @@ func LoadCfg() {
 	var err error
 	viperConfig, err = Load("repo")
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println("可以执行`gitmm config`命令生成示例配置文件。")
+		log.Consoleln(err)
+		log.Consoleln("可以执行`gitmm config`命令生成示例配置文件。")
 		os.Exit(1)
 	}
 	Remote = viperConfig.GetStringMapString("remote")
 	var ok = false
 	if Origin, ok = Remote["origin"]; !ok {
-		fmt.Println("未配置origin远端地址")
+		log.Consoleln("未配置origin远端地址")
 		os.Exit(1)
 	}
 	if Upstream, ok = Remote["upstream"]; !ok {
-		fmt.Println("未配置upstream远端地址")
+		log.Consoleln("未配置upstream远端地址")
 		os.Exit(1)
 	}
 	Repos = viperConfig.GetStringSlice("repos")

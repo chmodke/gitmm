@@ -18,9 +18,9 @@ var verifyCmd = &cobra.Command{
 	Long:  `校验配置文件`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config.LoadCfg()
-		log.Infof("upstream: %s", config.Upstream)
-		log.Infof("origin: %s", config.Origin)
-		log.Infof("repos: %s", config.Repos)
+		log.Consolef("upstream: %s", config.Upstream)
+		log.Consolef("origin: %s", config.Origin)
+		log.Consolef("repos: %s", config.Repos)
 	},
 }
 

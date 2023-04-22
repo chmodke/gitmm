@@ -2,7 +2,6 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"gitmm/config"
 	"gitmm/log"
@@ -19,24 +18,24 @@ var cloneCmd = &cobra.Command{
 		config.LoadCfg()
 
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		log.Debugf("work_dir: %s", workDir)
+		log.Printf("work_dir: %s", workDir)
 		workBranch, _ := cmd.Flags().GetString("work_branch")
-		log.Debugf("work_branch: %s", workBranch)
+		log.Printf("work_branch: %s", workBranch)
 		remote, _ := cmd.Flags().GetString("remote")
-		log.Debugf("remote: %s", remote)
+		log.Printf("remote: %s", remote)
 		match, _ := cmd.Flags().GetString("match")
-		log.Debugf("match: %s", match)
+		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Debugf("invert: %s", invert)
+		log.Printf("invert: %s", invert)
 
 		url, ok := config.Remote[remote]
 		if !ok {
-			fmt.Printf("未配置%s远端地址\n", remote)
+			log.Consolef("未配置%s远端地址\n", remote)
 			os.Exit(1)
 		}
 
-		log.Debugf("remote-url: %s", url)
-		log.Debugf("repos: %s", config.Repos)
+		log.Printf("remote-url: %s", url)
+		log.Printf("repos: %s", config.Repos)
 
 		for _, repo := range config.Repos {
 			var process util.Progress

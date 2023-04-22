@@ -2,9 +2,9 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/shirou/gopsutil/v3/host"
 	"github.com/spf13/cobra"
+	"gitmm/log"
 	"gitmm/util"
 	"os"
 	"regexp"
@@ -22,12 +22,12 @@ var versionCmd = &cobra.Command{
 	Long:    `Show tool version`,
 	Example: "gitmm version",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("gitmm version %s\n", VERSION)
-		fmt.Println(GetGitVersion())
+		log.Consolef("gitmm version %s\n", VERSION)
+		log.Consoleln(GetGitVersion())
 		platform, _, version, _ := host.PlatformInformation()
 		kernelArch, _ := host.KernelArch()
-		fmt.Printf("%s %s %s\n", platform, version, kernelArch)
-		fmt.Printf("Report Bug: <%s>\n", "https://gitee.com/chmodke/gitmm.git")
+		log.Consolef("%s %s %s\n", platform, version, kernelArch)
+		log.Consolef("Report Bug: <%s>\n", "https://gitee.com/chmodke/gitmm.git")
 	},
 }
 
@@ -43,8 +43,8 @@ func GetGitVersion() string {
 	}
 	out, ok := util.GetOut(util.ExecuteWithCharset(command, charset))
 	if !ok {
-		fmt.Println("执行git失败，请检查是否安装git，或者环境变量配置错误。")
-		fmt.Println("下载地址: <https://repo.huaweicloud.com/git-for-windows/>")
+		log.Consoleln("执行git失败，请检查是否安装git，或者环境变量配置错误。")
+		log.Consoleln("下载地址: <https://repo.huaweicloud.com/git-for-windows/>")
 		os.Exit(1)
 		return ""
 	} else {
@@ -57,8 +57,8 @@ func CheckGitVersion(version string) {
 	ver := r.FindString(version)
 
 	if !newVersion(ver, "2.28.0") {
-		fmt.Println("git版本低于2.28.0，部分功能不可用。")
-		fmt.Println("下载地址: <https://repo.huaweicloud.com/git-for-windows/>")
+		log.Consoleln("git版本低于2.28.0，部分功能不可用。")
+		log.Consoleln("下载地址: <https://repo.huaweicloud.com/git-for-windows/>")
 	}
 }
 

@@ -22,23 +22,23 @@ var listCmd = &cobra.Command{
 	Example: "gitmm list -w tmp",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		log.Debugf("work_dir: %s", workDir)
+		log.Printf("work_dir: %s", workDir)
 		match, _ := cmd.Flags().GetString("match")
-		log.Debugf("match: %s", match)
+		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Debugf("invert: %s", invert)
+		log.Printf("invert: %s", invert)
 		lineNumber, _ := cmd.Flags().GetInt("line-number")
-		log.Debugf("line-number: %d", lineNumber)
+		log.Printf("line-number: %d", lineNumber)
 
 		localDir, err := util.GetWorkDir(workDir)
 		if err != nil {
-			log.Error("获取工作路径失败")
+			log.Consoleln("获取工作路径失败")
 			return nil
 		}
 
 		repos, err := util.FindGit(localDir)
 		if err != nil {
-			log.Error("获取本地仓库失败")
+			log.Consoleln("获取本地仓库失败")
 		}
 
 		printHead()
@@ -59,8 +59,8 @@ var listCmd = &cobra.Command{
 }
 
 func printHead() {
-	fmt.Printf("%-16s  %-16s  %-12s  %-34s  %-34s\n", "Repo", "BranchName", "TrackTo", "LastCommit", "Status")
-	fmt.Printf(strings.Repeat("-", 17) + "+" + strings.Repeat("-", 17) + "+" + strings.Repeat("-", 13) + "+" + strings.Repeat("-", 35) + "+" + strings.Repeat("-", 34) + "\n")
+	log.Consolef("%-16s  %-16s  %-12s  %-34s  %-34s\n", "Repo", "BranchName", "TrackTo", "LastCommit", "Status")
+	log.Consolef(strings.Repeat("-", 17) + "+" + strings.Repeat("-", 17) + "+" + strings.Repeat("-", 13) + "+" + strings.Repeat("-", 35) + "+" + strings.Repeat("-", 34) + "\n")
 }
 
 func printStatus(repo, branchName, branchTrack, lastCommit string, status map[string]int) {
@@ -72,7 +72,7 @@ func printStatus(repo, branchName, branchTrack, lastCommit string, status map[st
 	} else {
 		statusLine = "clean"
 	}
-	fmt.Printf("%-16s  %-16s  %-12s  %-34s  %-34s\n", util.RightCut(repo, 16), util.LeftCut(branchName, 16), util.LeftCut(branchTrack, 13), util.LeftCut(lastCommit, 34), statusLine)
+	log.Consolef("%-16s  %-16s  %-12s  %-34s  %-34s\n", util.RightCut(repo, 16), util.LeftCut(branchName, 16), util.LeftCut(branchTrack, 13), util.LeftCut(lastCommit, 34), statusLine)
 }
 
 func init() {

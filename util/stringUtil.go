@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"gitmm/log"
 	"math/rand"
 	"regexp"
 	"strconv"
@@ -36,9 +37,9 @@ func Match(text string, regex string, invertRegex string) bool {
 }
 
 func ExecStatistic(text string, result map[string]string) {
-	fmt.Println(Title("", 80, "#"))
-	fmt.Println(LeftAlign(fmt.Sprintf("%s statistics", text), 2, " "))
-	fmt.Println(Title("", 80, "-"))
+	log.Consoleln(Title("", 80, "#"))
+	log.Consoleln(LeftAlign(fmt.Sprintf("%s statistics", text), 2, " "))
+	log.Consoleln(Title("", 80, "-"))
 	maxLen := 0
 	for k := range result {
 		if len(k) > maxLen {
@@ -48,9 +49,9 @@ func ExecStatistic(text string, result map[string]string) {
 
 	formatter := "  %-" + strconv.Itoa(maxLen) + "s \t%s\n"
 	for k, v := range result {
-		fmt.Printf(formatter, k, v)
+		log.Consolef(formatter, k, v)
 	}
-	fmt.Println(Title("", 80, "#"))
+	log.Consoleln(Title("", 80, "#"))
 }
 
 func RandCreator(l int) string {

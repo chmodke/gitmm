@@ -6,8 +6,10 @@ package main
 
 import (
 	"gitmm/cmd"
+	"gitmm/log"
 )
 
 func main() {
 	cmd.Execute()
+	log.FlushAndClose()
 }

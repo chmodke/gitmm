@@ -22,25 +22,25 @@ var batchCmd = &cobra.Command{
 			return errors.New("请提供要执行的命令")
 		}
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		log.Debugf("work_dir: %s", workDir)
+		log.Printf("work_dir: %s", workDir)
 		match, _ := cmd.Flags().GetString("match")
-		log.Debugf("match: %s", match)
+		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Debugf("invert: %s", invert)
+		log.Printf("invert: %s", invert)
 
 		gitCommand := args[0]
 		gitCommand = strings.TrimLeft(gitCommand, "git ")
-		log.Debugf("git command: %s", gitCommand)
+		log.Printf("git command: %s", gitCommand)
 
 		localDir, err := util.GetWorkDir(workDir)
 		if err != nil {
-			log.Error("获取工作路径失败")
+			log.Consoleln("获取工作路径失败")
 			return nil
 		}
 
 		repos, err := util.FindGit(localDir)
 		if err != nil {
-			log.Error("获取本地仓库失败")
+			log.Consoleln("获取本地仓库失败")
 		}
 
 		result := make(map[string]string)
@@ -49,9 +49,9 @@ var batchCmd = &cobra.Command{
 				result[repo] = SKIP
 				continue
 			}
-			log.InfoO(repo)
+			log.Consoleln(repo)
 			ok := util.GitCommand(filepath.Join(localDir, repo), gitCommand)
-			log.InfoO("")
+			log.Consoleln("")
 			if ok {
 				result[repo] = OK
 			} else {

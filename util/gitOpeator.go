@@ -84,8 +84,8 @@ func GitSync(upstream string, origin string, repo string, workDir string, progre
 	var command string
 	var ret bool
 
-	log.Debugf("sync %s, from %s to %s.", repo, upstream, origin)
-	log.Debug("1.1 init local repo.")
+	log.Printf("sync %s, from %s to %s.", repo, upstream, origin)
+	log.Println("1.1 init local repo.")
 	command = fmt.Sprintf("git init %s", localDir)
 	ret = Status(Execute(command))
 	if !ret {
@@ -93,7 +93,7 @@ func GitSync(upstream string, origin string, repo string, workDir string, progre
 	}
 	progress.Next()
 
-	log.Debug("2.1 add upstream fetch url.")
+	log.Println("2.1 add upstream fetch url.")
 	builder := &CmdBuilder{}
 	builder.Add("git").Add("-C").Add(localDir)
 	builder.Add("remote").Add("add upstream").Add(upstreamRemote)
@@ -103,7 +103,7 @@ func GitSync(upstream string, origin string, repo string, workDir string, progre
 	}
 	progress.Next()
 
-	log.Debug("2.2 fetch upstream all.")
+	log.Println("2.2 fetch upstream all.")
 	builder.Reset()
 	builder.Add("git").Add("-C").Add(localDir)
 	builder.Add("fetch").Add("--all --prune --tags")
@@ -123,7 +123,7 @@ func GitSync(upstream string, origin string, repo string, workDir string, progre
 	}
 	progress.Next()
 
-	log.Debug("2.3 track all branch.")
+	log.Println("2.3 track all branch.")
 	builder.Reset()
 	builder.Add("git").Add("-C").Add(localDir)
 	builder.Add("branch -f")
@@ -138,7 +138,7 @@ func GitSync(upstream string, origin string, repo string, workDir string, progre
 	}
 	progress.Next()
 
-	log.Debug("2.4 remove upstream fetch url.")
+	log.Println("2.4 remove upstream fetch url.")
 	builder.Reset()
 	builder.Add("git").Add("-C").Add(localDir)
 	builder.Add("remote").Add("remove upstream")
@@ -148,7 +148,7 @@ func GitSync(upstream string, origin string, repo string, workDir string, progre
 	}
 	progress.Next()
 
-	log.Debug("3.1 add origin url.")
+	log.Println("3.1 add origin url.")
 	builder.Reset()
 	builder.Add("git").Add("-C").Add(localDir)
 	builder.Add("remote").Add("add origin").Add(originRemote)
@@ -158,7 +158,7 @@ func GitSync(upstream string, origin string, repo string, workDir string, progre
 	}
 	progress.Next()
 
-	log.Debug("3.2 push origin all.")
+	log.Println("3.2 push origin all.")
 	builder.Reset()
 	builder.Add("git").Add("-C").Add(localDir)
 	builder.Add("push").Add("origin --all -f")
@@ -259,7 +259,7 @@ func GitRemote(localRepo string) bool {
 	builder.Add("git").Add("-C").Add(localRepo)
 	builder.Add("remote -v")
 	out, ret := GetOut(Execute(builder.Build()))
-	log.InfoO(out)
+	log.Consoleln(out)
 
 	return ret
 }
@@ -311,7 +311,7 @@ func GitCommand(localRepo, gitCommand string) bool {
 	builder.Add("git").Add("-C").Add(localRepo)
 	builder.Add(gitCommand)
 	out, ret := GetOut(Execute(builder.Build()))
-	log.InfoO(out)
+	log.Consoleln(out)
 	return ret
 }
 

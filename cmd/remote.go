@@ -16,20 +16,20 @@ var remoteCmd = &cobra.Command{
 	Example: "gitmm remote -w tmp",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		log.Debugf("work_dir: %s", workDir)
+		log.Printf("work_dir: %s", workDir)
 		match, _ := cmd.Flags().GetString("match")
-		log.Debugf("match: %s", match)
+		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Debugf("invert: %s", invert)
+		log.Printf("invert: %s", invert)
 
 		localDir, err := util.GetWorkDir(workDir)
 		if err != nil {
-			log.Error("获取工作路径失败")
+			log.Consoleln("获取工作路径失败")
 			return
 		}
 		repos, err := util.FindGit(localDir)
 		if err != nil {
-			log.Error("获取本地仓库失败")
+			log.Consoleln("获取本地仓库失败")
 		}
 		result := make(map[string]string)
 		for _, repo := range repos {
@@ -37,9 +37,9 @@ var remoteCmd = &cobra.Command{
 				result[repo] = SKIP
 				continue
 			}
-			log.InfoO(repo)
+			log.Consoleln(repo)
 			ok := util.GitRemote(filepath.Join(localDir, repo))
-			log.InfoO("")
+			log.Consoleln("")
 			if ok {
 				result[repo] = OK
 			} else {
