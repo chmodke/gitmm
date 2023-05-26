@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"gitmm/config"
+	"gitmm/git"
 	"gitmm/log"
 	"gitmm/util"
 	"os"
@@ -37,7 +38,7 @@ var syncCmd = &cobra.Command{
 				process.Finish(SKIP)
 				continue
 			}
-			ok := util.GitSync(config.Upstream, config.Origin, repo, tmp, &process)
+			ok := git.GitSync(config.Upstream, config.Origin, repo, tmp, &process)
 			if ok {
 				process.Finish(OK)
 			} else {

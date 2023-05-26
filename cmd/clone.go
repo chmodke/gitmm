@@ -4,6 +4,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"gitmm/config"
+	"gitmm/git"
 	"gitmm/log"
 	"gitmm/util"
 	"os"
@@ -44,7 +45,7 @@ var cloneCmd = &cobra.Command{
 				process.Finish(SKIP)
 				continue
 			}
-			ok := util.GitClone(url, repo, remote, workDir, workBranch, &process)
+			ok := git.GitClone(url, repo, remote, workDir, workBranch, &process)
 			if ok {
 				process.Finish(OK)
 			} else {

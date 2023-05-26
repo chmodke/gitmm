@@ -3,6 +3,7 @@ package cmd
 
 import (
 	"errors"
+	"gitmm/git"
 	"gitmm/log"
 	"gitmm/util"
 	"path/filepath"
@@ -32,13 +33,13 @@ var batchCmd = &cobra.Command{
 		gitCommand = strings.TrimLeft(gitCommand, "git ")
 		log.Printf("git command: %s", gitCommand)
 
-		localDir, err := util.GetWorkDir(workDir)
+		localDir, err := git.GetWorkDir(workDir)
 		if err != nil {
 			log.Consoleln("获取工作路径失败")
 			return nil
 		}
 
-		repos, err := util.FindGit(localDir)
+		repos, err := git.FindGit(localDir)
 		if err != nil {
 			log.Consoleln("获取本地仓库失败")
 		}
@@ -50,7 +51,7 @@ var batchCmd = &cobra.Command{
 				continue
 			}
 			log.Consoleln(repo)
-			ok := util.GitCommand(filepath.Join(localDir, repo), gitCommand)
+			ok := git.GitCommand(filepath.Join(localDir, repo), gitCommand)
 			log.Consoleln("")
 			if ok {
 				result[repo] = OK

@@ -4,6 +4,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"gitmm/git"
 	"gitmm/log"
 	"gitmm/util"
 	"path/filepath"
@@ -30,13 +31,13 @@ var listCmd = &cobra.Command{
 		lineNumber, _ := cmd.Flags().GetInt("line-number")
 		log.Printf("line-number: %d", lineNumber)
 
-		localDir, err := util.GetWorkDir(workDir)
+		localDir, err := git.GetWorkDir(workDir)
 		if err != nil {
 			log.Consoleln("获取工作路径失败")
 			return nil
 		}
 
-		repos, err := util.FindGit(localDir)
+		repos, err := git.FindGit(localDir)
 		if err != nil {
 			log.Consoleln("获取本地仓库失败")
 		}
@@ -48,10 +49,10 @@ var listCmd = &cobra.Command{
 			}
 
 			repoPath := filepath.Join(localDir, repo)
-			status := util.GitStatusStatistic(repoPath)
-			branchName := util.GitCurrentBranch(repoPath)
-			branchTrack := util.GitBranchTrack(repoPath, branchName)
-			lastCommit := util.GitLastCommit(repoPath)
+			status := git.GitStatusStatistic(repoPath)
+			branchName := git.GitCurrentBranch(repoPath)
+			branchTrack := git.GitBranchTrack(repoPath, branchName)
+			lastCommit := git.GitLastCommit(repoPath)
 			printStatus(repo, branchName, branchTrack, lastCommit, status)
 		}
 		return nil

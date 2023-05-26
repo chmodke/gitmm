@@ -3,6 +3,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"gitmm/git"
 	"gitmm/log"
 	"gitmm/util"
 	"path/filepath"
@@ -24,12 +25,12 @@ var pullCmd = &cobra.Command{
 		invert, _ := cmd.Flags().GetString("invert-match")
 		log.Printf("invert: %s", invert)
 
-		localDir, err := util.GetWorkDir(workDir)
+		localDir, err := git.GetWorkDir(workDir)
 		if err != nil {
 			log.Consoleln("获取工作路径失败")
 			return
 		}
-		repos, err := util.FindGit(localDir)
+		repos, err := git.FindGit(localDir)
 		if err != nil {
 			log.Consoleln("获取本地仓库失败")
 		}
@@ -40,7 +41,7 @@ var pullCmd = &cobra.Command{
 				process.Finish(SKIP)
 				continue
 			}
-			ok := util.GitPull(filepath.Join(localDir, repo), force, &process)
+			ok := git.GitPull(filepath.Join(localDir, repo), force, &process)
 			if ok {
 				process.Finish(OK)
 			} else {
