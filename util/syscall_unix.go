@@ -9,9 +9,10 @@ import (
 	"strings"
 )
 
-func ExecShell(command string, charset Charset) (outStr string, errStr string, err error) {
-	log.Printf("command: %s", command)
+func ExecShell(workDir string, command string, charset Charset) (outStr string, errStr string, err error) {
+	log.Printf("exec command: [%s] at [%s].", command, workDir)
 	var cmd = exec.Command("/bin/bash", "-c", command)
+	cmd.Dir = workDir
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr

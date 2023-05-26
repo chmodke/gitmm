@@ -17,17 +17,16 @@ func GitClone(url string, repo string, remote string, workDir string, workBranch
 	builder := &util.CmdBuilder{}
 	builder.Add("git").Add("clone")
 	builder.Add("-o").Add(remote).Add("--")
-	builder.Add(remoteAddr).Add(localDir)
-	ret := util.Status(util.Execute(builder.Build()))
+	builder.Add(remoteAddr).Add(repo)
+	ret := util.Status(util.Execute(workPath, builder.Build()))
 	if !ret {
 		return ret
 	}
 	progress.Next()
 
 	builder.Reset()
-	builder.Add("git").Add("-C").Add(localDir)
-	builder.Add("checkout").Add(workBranch)
-	ret = util.Status(util.Execute(builder.Build()))
+	builder.Add("git").Add("checkout").Add(workBranch)
+	ret = util.Status(util.Execute(localDir, builder.Build()))
 	progress.Next()
 	return ret
 }

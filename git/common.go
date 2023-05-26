@@ -12,9 +12,8 @@ import (
 
 func GitCommand(localRepo, gitCommand string) bool {
 	builder := &util.CmdBuilder{}
-	builder.Add("git").Add("-C").Add(localRepo)
-	builder.Add(gitCommand)
-	out, ret := util.GetOut(util.Execute(builder.Build()))
+	builder.Add("git").Add(gitCommand)
+	out, ret := util.GetOut(util.Execute(localRepo, builder.Build()))
 	log.Consoleln(out)
 	return ret
 }

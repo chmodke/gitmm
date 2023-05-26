@@ -9,11 +9,11 @@ const (
 	GBK  = Charset("GBK")
 )
 
-func Execute(command string) (outStr string, errStr string, err error) {
-	return ExecShell(command, UTF8)
+func Execute(workDir string, command string) (outStr string, errStr string, err error) {
+	return ExecShell(workDir, command, UTF8)
 }
-func ExecuteWithCharset(command string, charset Charset) (outStr string, errStr string, err error) {
-	return ExecShell(command, charset)
+func ExecuteWithCharset(workDir string, command string, charset Charset) (outStr string, errStr string, err error) {
+	return ExecShell(workDir, command, charset)
 }
 
 func Status(stdout string, stderr string, err error) bool {
