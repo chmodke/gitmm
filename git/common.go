@@ -3,7 +3,6 @@ package git
 import (
 	"gitmm/log"
 	"gitmm/util"
-	"io/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -34,7 +33,7 @@ func GetWorkDir(workDir string) (string, error) {
 		return localDir, nil
 	}
 
-	err := os.MkdirAll(localDir, fs.ModeDir)
+	err := os.MkdirAll(localDir, 0750)
 	if err != nil {
 		return "", err
 	}
