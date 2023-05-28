@@ -1,7 +1,7 @@
 BUILD_NAME:=gitmm
 BIN_DIR:=bin
 BUILD_MODE?=snapshot
-BUILD_VERSION?=1.2.0
+BUILD_VERSION?=1.5.0
 BUILD_DATE:=$(shell date '+%Y%m%d.%H%M%S')
 SOURCE:=*.go
 
@@ -11,7 +11,8 @@ else
 SOFT_VERSION:="${BUILD_VERSION}-${BUILD_DATE}"
 endif
 
-LDFLAGS:=-ldflags "-X '${BUILD_NAME}/cmd.VERSION=${SOFT_VERSION}'"
+LDFLAGS:=-ldflags "-X '${BUILD_NAME}/cmd.VERSION=${SOFT_VERSION}'\
+-X '${BUILD_NAME}/cmd.BuildId=${BUILD_DATE}'"
 
 all:clean build_win package
 

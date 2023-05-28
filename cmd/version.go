@@ -9,6 +9,7 @@ import (
 )
 
 var VERSION = "1.1.0"
+var BuildId = "20230522.224042"
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
@@ -17,7 +18,7 @@ var versionCmd = &cobra.Command{
 	Long:    `Show tool version`,
 	Example: "gitmm version",
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Consolef("gitmm version %s\n", VERSION)
+		log.Consolef("gitmm version %s, build id %s\n", VERSION, BuildId)
 		log.Consoleln(git.GetGitVersion())
 		platform, _, version, _ := host.PlatformInformation()
 		kernelArch, _ := host.KernelArch()
