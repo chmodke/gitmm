@@ -11,8 +11,8 @@ else
 SOFT_VERSION:="${BUILD_VERSION}-${BUILD_DATE}"
 endif
 
-LDFLAGS:=-ldflags "-X '${BUILD_NAME}/cmd.VERSION=${SOFT_VERSION}'\
--X '${BUILD_NAME}/cmd.BuildId=${BUILD_DATE}'"
+LDFLAGS:=-ldflags "-X 'github.com/chmodke/${BUILD_NAME}/cmd.VERSION=${SOFT_VERSION}'\
+-X 'github.com/chmodke/${BUILD_NAME}/cmd.BuildId=${BUILD_DATE}'"
 
 all:clean build_win build_linux package
 
