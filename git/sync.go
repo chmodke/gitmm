@@ -2,14 +2,14 @@ package git
 
 import (
 	"fmt"
-	"gitmm/log"
-	"gitmm/util"
+	"github.com/chmodke/gitmm/log"
+	"github.com/chmodke/gitmm/util"
 	"path/filepath"
 	"strings"
 )
 
-// GitSync is entry function
-func GitSync(upstream string, origin string, repo string, workDir string, progress *util.Progress) bool {
+// Sync is entry function
+func Sync(upstream string, origin string, repo string, workDir string, progress *util.Progress) bool {
 	upstreamRemote := fmt.Sprintf("%s/%s.git", upstream, repo)
 	originRemote := fmt.Sprintf("%s/%s.git", origin, repo)
 

@@ -2,19 +2,19 @@
 package cmd
 
 import (
+	"github.com/chmodke/gitmm/git"
+	"github.com/chmodke/gitmm/log"
+	"github.com/chmodke/gitmm/util"
 	"github.com/spf13/cobra"
-	"gitmm/git"
-	"gitmm/log"
-	"gitmm/util"
 	"path/filepath"
 )
 
-// switchCmd represents the switch command
-var switchCmd = &cobra.Command{
-	Use:     "switch",
-	Short:   "批量切换分支",
-	Long:    `执行命令会遍历work_dir中的git仓库，并执行分支切换操作。`,
-	Example: "gitmm switch -w tmp -b develop",
+// branchDeleteCmd represents the delete command
+var branchDeleteCmd = &cobra.Command{
+	Use:     "delete",
+	Short:   "批量删除分支",
+	Long:    `执行命令会遍历work_dir中的git仓库，并执行分支删除操作。`,
+	Example: "gitmm branch delete -w tmp -b develop",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		log.Printf("work_dir: %s", workDir)
@@ -43,7 +43,7 @@ var switchCmd = &cobra.Command{
 				process.Finish(SKIP)
 				continue
 			}
-			ok := git.GitSwitchBranch(filepath.Join(localDir, repo), branch, force, &process)
+			ok := git.DeleteBranch(filepath.Join(localDir, repo), branch, force, &process)
 			if ok {
 				process.Finish(OK)
 			} else {
@@ -54,12 +54,12 @@ var switchCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(switchCmd)
+	branchCmd.AddCommand(branchDeleteCmd)
 
-	switchCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	switchCmd.Flags().StringP("branch", "b", "master", "目标分支/tag/commit")
-	switchCmd.MarkFlagRequired("branch")
-	switchCmd.Flags().BoolP("force", "f", false, "强制切换")
-	switchCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
-	switchCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
+	branchDeleteCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
+	branchDeleteCmd.Flags().StringP("branch", "b", "master", "目标分支/tag/commit")
+	branchDeleteCmd.MarkFlagRequired("branch")
+	branchDeleteCmd.Flags().BoolP("force", "f", false, "强制删除")
+	branchDeleteCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
+	branchDeleteCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
 }

@@ -2,10 +2,10 @@
 package cmd
 
 import (
+	"github.com/chmodke/gitmm/git"
+	"github.com/chmodke/gitmm/log"
 	"github.com/shirou/gopsutil/v3/host"
 	"github.com/spf13/cobra"
-	"gitmm/git"
-	"gitmm/log"
 )
 
 var VERSION = "1.1.0"

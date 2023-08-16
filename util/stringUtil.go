@@ -2,7 +2,7 @@ package util
 
 import (
 	"fmt"
-	"gitmm/log"
+	"github.com/chmodke/gitmm/log"
 	"math/rand"
 	"regexp"
 	"strconv"

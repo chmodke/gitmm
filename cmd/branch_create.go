@@ -2,19 +2,19 @@
 package cmd
 
 import (
+	"github.com/chmodke/gitmm/git"
+	"github.com/chmodke/gitmm/log"
+	"github.com/chmodke/gitmm/util"
 	"github.com/spf13/cobra"
-	"gitmm/git"
-	"gitmm/log"
-	"gitmm/util"
 	"path/filepath"
 )
 
-// createCmd represents the create command
-var createCmd = &cobra.Command{
+// branchCreateCmd represents the create command
+var branchCreateCmd = &cobra.Command{
 	Use:     "create",
 	Short:   "批量创建分支",
 	Long:    `执行命令会遍历work_dir中的git仓库，并执行分支创建操作。`,
-	Example: "git create -w tmp -b develop",
+	Example: "git branch create -w tmp -b develop",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		log.Printf("work_dir: %s", workDir)
@@ -43,7 +43,7 @@ var createCmd = &cobra.Command{
 				process.Finish(SKIP)
 				continue
 			}
-			ok := git.GitCreateBranch(filepath.Join(localDir, repo), newBranch, startPoint, &process)
+			ok := git.CreateBranch(filepath.Join(localDir, repo), newBranch, startPoint, &process)
 			if ok {
 				process.Finish(OK)
 			} else {
@@ -54,12 +54,12 @@ var createCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(createCmd)
+	branchCmd.AddCommand(branchCreateCmd)
 
-	createCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	createCmd.Flags().StringP("new_branch", "b", "master", "新分支名称")
-	createCmd.MarkFlagRequired("new_branch")
-	createCmd.Flags().StringP("refs", "r", "HEAD", "新分支起点")
-	createCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
-	createCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
+	branchCreateCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
+	branchCreateCmd.Flags().StringP("new_branch", "b", "master", "新分支名称")
+	branchCreateCmd.MarkFlagRequired("new_branch")
+	branchCreateCmd.Flags().StringP("refs", "r", "HEAD", "新分支起点")
+	branchCreateCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
+	branchCreateCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
 }

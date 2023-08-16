@@ -2,12 +2,12 @@ package git
 
 import (
 	"fmt"
-	"gitmm/util"
+	"github.com/chmodke/gitmm/util"
 	"path/filepath"
 )
 
-//GitClone is entry function
-func GitClone(url string, repo string, remote string, workDir string, workBranch string, progress *util.Progress) bool {
+// Clone is entry function
+func Clone(url string, repo string, remote string, workDir string, workBranch string, progress *util.Progress) bool {
 	workPath, err := GetWorkDir(workDir)
 	if err != nil {
 		return false

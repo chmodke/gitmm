@@ -1,6 +1,6 @@
 package util
 
-import "gitmm/log"
+import "github.com/chmodke/gitmm/log"
 
 type Charset string
 

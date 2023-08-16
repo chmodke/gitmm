@@ -4,7 +4,7 @@ package util
 
 import (
 	"bytes"
-	"gitmm/log"
+	"github.com/chmodke/gitmm/log"
 	"os/exec"
 	"strings"
 )

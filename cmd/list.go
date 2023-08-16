@@ -3,10 +3,10 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/chmodke/gitmm/git"
+	"github.com/chmodke/gitmm/log"
+	"github.com/chmodke/gitmm/util"
 	"github.com/spf13/cobra"
-	"gitmm/git"
-	"gitmm/log"
-	"gitmm/util"
 	"path/filepath"
 	"strings"
 )
@@ -14,7 +14,7 @@ import (
 // listCmd represents the batch command
 // name
 // status(A D M ?) git status --porcelain
-// branch(git branch -l $(git branch --show-current) -v --format='%(upstream)') //%(upstream:remotename)
+// branch(git branch -l $(git branch --show-current) -v --format='%(upstream:lstrip=2)') //%(upstream:remotename)
 // lastcommit(git log -n1 --pretty="format:%ad %an" --date=iso)
 var listCmd = &cobra.Command{
 	Use:     "list",
@@ -49,19 +49,28 @@ var listCmd = &cobra.Command{
 			}
 
 			repoPath := filepath.Join(localDir, repo)
-			status := git.GitStatusStatistic(repoPath)
-			branchName := git.GitCurrentBranch(repoPath)
-			branchTrack := git.GitBranchTrack(repoPath, branchName)
-			lastCommit := git.GitLastCommit(repoPath)
+			status := git.StatusStatistic(repoPath)
+			branchName := git.CurrentBranch(repoPath)
+			branchTrack := git.BranchTrack(repoPath, branchName)
+			lastCommit := git.LastCommit(repoPath)
 			printStatus(repo, branchName, branchTrack, lastCommit, status)
 		}
+		printSplit(17, 17, 23, 35, 34)
 		return nil
 	},
 }
 
+func printLine(one, two, three, four, five string) {
+	log.Consolef("%-18s%-18s%-24s%-36s%-34s\n", one, two, three, four, five)
+}
+
+func printSplit(one, two, three, four, five int) {
+	log.Consolef(strings.Repeat("-", one) + "+" + strings.Repeat("-", two) + "+" + strings.Repeat("-", three) + "+" + strings.Repeat("-", four) + "+" + strings.Repeat("-", five) + "\n")
+}
+
 func printHead() {
-	log.Consolef("%-16s  %-16s  %-12s  %-34s  %-34s\n", "Repo", "BranchName", "TrackTo", "LastCommit", "Status")
-	log.Consolef(strings.Repeat("-", 17) + "+" + strings.Repeat("-", 17) + "+" + strings.Repeat("-", 13) + "+" + strings.Repeat("-", 35) + "+" + strings.Repeat("-", 34) + "\n")
+	printLine("Repo", "BranchName", "TrackTo", "LastCommit", "Status")
+	printSplit(17, 17, 23, 35, 34)
 }
 
 func printStatus(repo, branchName, branchTrack, lastCommit string, status map[string]int) {
@@ -73,7 +82,7 @@ func printStatus(repo, branchName, branchTrack, lastCommit string, status map[st
 	} else {
 		statusLine = "clean"
 	}
-	log.Consolef("%-16s  %-16s  %-12s  %-34s  %-34s\n", util.RightCut(repo, 16), util.LeftCut(branchName, 16), util.LeftCut(branchTrack, 13), util.LeftCut(lastCommit, 34), statusLine)
+	printLine(util.RightCut(repo, 16), util.LeftCut(branchName, 16), util.LeftCut(branchTrack, 23), util.LeftCut(lastCommit, 34), statusLine)
 }
 
 func init() {

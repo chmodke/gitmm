@@ -3,9 +3,9 @@ package cmd
 
 import (
 	"errors"
-	"gitmm/git"
-	"gitmm/log"
-	"gitmm/util"
+	"github.com/chmodke/gitmm/git"
+	"github.com/chmodke/gitmm/log"
+	"github.com/chmodke/gitmm/util"
 	"path/filepath"
 	"strings"
 
@@ -51,7 +51,7 @@ var batchCmd = &cobra.Command{
 				continue
 			}
 			log.Consoleln(repo)
-			ok := git.GitCommand(filepath.Join(localDir, repo), gitCommand)
+			ok := git.Command(filepath.Join(localDir, repo), gitCommand)
 			log.Consoleln("")
 			if ok {
 				result[repo] = OK

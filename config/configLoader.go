@@ -2,8 +2,8 @@ package config
 
 import (
 	"fmt"
+	"github.com/chmodke/gitmm/log"
 	"github.com/spf13/viper"
-	"gitmm/log"
 	"os"
 )
 

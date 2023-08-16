@@ -1,9 +1,9 @@
 package git
 
-import "gitmm/util"
+import "github.com/chmodke/gitmm/util"
 
-// GitPull is entry function
-func GitPull(localRepo string, force bool, progress *util.Progress) bool {
+// Pull is entry function
+func Pull(localRepo string, force bool, progress *util.Progress) bool {
 	builder := &util.CmdBuilder{}
 	builder.Add("git").Add("symbolic-ref --short HEAD")
 	branch, ret := util.GetOut(util.Execute(localRepo, builder.Build()))

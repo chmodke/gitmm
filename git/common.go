@@ -1,15 +1,15 @@
 package git
 
 import (
-	"gitmm/log"
-	"gitmm/util"
+	"github.com/chmodke/gitmm/log"
+	"github.com/chmodke/gitmm/util"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-func GitCommand(localRepo, gitCommand string) bool {
+func Command(localRepo, gitCommand string) bool {
 	builder := &util.CmdBuilder{}
 	builder.Add("git").Add(gitCommand)
 	out, ret := util.GetOut(util.Execute(localRepo, builder.Build()))

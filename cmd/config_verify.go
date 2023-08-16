@@ -1,21 +1,21 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"gitmm/config"
-	"gitmm/log"
+	"github.com/chmodke/gitmm/config"
+	"github.com/chmodke/gitmm/log"
 
 	"github.com/spf13/cobra"
 )
 
 // verifyCmd represents the verify command
 var verifyCmd = &cobra.Command{
-	Use:   "verify",
-	Short: "校验配置文件",
-	Long:  `校验配置文件`,
+	Use:     "verify",
+	Short:   "校验配置文件",
+	Long:    `校验配置文件`,
+	Example: "gitmm config verify",
 	Run: func(cmd *cobra.Command, args []string) {
 		config.LoadCfg()
 		log.Consolef("upstream: %s", config.Upstream)

@@ -2,11 +2,11 @@
 package cmd
 
 import (
+	"github.com/chmodke/gitmm/config"
+	"github.com/chmodke/gitmm/git"
+	"github.com/chmodke/gitmm/log"
+	"github.com/chmodke/gitmm/util"
 	"github.com/spf13/cobra"
-	"gitmm/config"
-	"gitmm/git"
-	"gitmm/log"
-	"gitmm/util"
 	"os"
 )
 
@@ -20,8 +20,8 @@ var cloneCmd = &cobra.Command{
 
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		log.Printf("work_dir: %s", workDir)
-		workBranch, _ := cmd.Flags().GetString("work_branch")
-		log.Printf("work_branch: %s", workBranch)
+		workBranch, _ := cmd.Flags().GetString("branch")
+		log.Printf("branch: %s", workBranch)
 		remote, _ := cmd.Flags().GetString("remote")
 		log.Printf("remote: %s", remote)
 		match, _ := cmd.Flags().GetString("match")
@@ -45,7 +45,7 @@ var cloneCmd = &cobra.Command{
 				process.Finish(SKIP)
 				continue
 			}
-			ok := git.GitClone(url, repo, remote, workDir, workBranch, &process)
+			ok := git.Clone(url, repo, remote, workDir, workBranch, &process)
 			if ok {
 				process.Finish(OK)
 			} else {
@@ -59,7 +59,7 @@ func init() {
 	rootCmd.AddCommand(cloneCmd)
 
 	cloneCmd.Flags().StringP("work_dir", "w", "master", "克隆代码的存放路径")
-	cloneCmd.Flags().StringP("work_branch", "b", "master", "克隆代码的分支")
+	cloneCmd.Flags().StringP("branch", "b", "master", "克隆代码的分支")
 	cloneCmd.Flags().StringP("remote", "u", "origin", "克隆代码的远程名称")
 	cloneCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
 	cloneCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")

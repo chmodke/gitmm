@@ -1,11 +1,11 @@
 package git
 
 import (
-	"gitmm/util"
+	"github.com/chmodke/gitmm/util"
 	"strings"
 )
 
-func GitStatusStatistic(localRepo string) map[string]int {
+func StatusStatistic(localRepo string) map[string]int {
 	status := make(map[string]int)
 	builder := &util.CmdBuilder{}
 	builder.Reset()
@@ -23,7 +23,7 @@ func GitStatusStatistic(localRepo string) map[string]int {
 	return status
 }
 
-func GitCurrentBranch(localRepo string) string {
+func CurrentBranch(localRepo string) string {
 	builder := &util.CmdBuilder{}
 	builder.Reset()
 	builder.Add("git").Add("branch")
@@ -48,19 +48,19 @@ func GitCurrentBranch(localRepo string) string {
 	return out
 }
 
-func GitBranchTrack(localRepo, branchName string) string {
+func BranchTrack(localRepo, branchName string) string {
 	builder := &util.CmdBuilder{}
 	builder.Reset()
 	builder.Add("git").Add("branch")
 	builder.Add("-l")
 	builder.Add(branchName)
-	builder.Add("-v --format=%(upstream:remotename)")
+	builder.Add("-v --format=%(upstream:lstrip=2)")
 
 	out, _ := util.GetOut(util.Execute(localRepo, builder.Build()))
 	return out
 }
 
-func GitLastCommit(localRepo string) string {
+func LastCommit(localRepo string) string {
 	builder := &util.CmdBuilder{}
 	builder.Reset()
 	builder.Add("git").Add("log")

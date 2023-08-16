@@ -14,25 +14,31 @@ endif
 LDFLAGS:=-ldflags "-X '${BUILD_NAME}/cmd.VERSION=${SOFT_VERSION}'\
 -X '${BUILD_NAME}/cmd.BuildId=${BUILD_DATE}'"
 
-all:clean build_win package
+all:clean build_win build_linux package
 
-test: clean
+prepare:
+	@echo "prepare"
+	- @go mod tidy
+
+test: prepare clean
 	@echo "test"
 	- @go test ./...
 
-build_win: test
+build_win: prepare test
 	@echo "build win"
 	@GO111MODULE=on CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build ${LDFLAGS} -o ${BIN_DIR}/${BUILD_NAME}.exe ${SOURCE}
+	- @upx ${BIN_DIR}/${BUILD_NAME}.exe
 
-build_linux: test
+build_linux: prepare test
 	@echo "build linux"
 	@GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build ${LDFLAGS} -o ${BIN_DIR}/${BUILD_NAME} ${SOURCE}
+	- @upx ${BIN_DIR}/${BUILD_NAME}
 
-install_win: clean build_win
+install_win: clean prepare build_win
 	@echo "install win"
 	@cp ${BIN_DIR}/${BUILD_NAME}.exe /c/Windows/
 
-install_linux: clean build_linux
+install_linux: clean prepare build_linux
 	@echo "install linux"
 	@cp ${BIN_DIR}/${BUILD_NAME} /usr/bin
 

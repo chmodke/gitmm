@@ -1,8 +1,8 @@
 package git
 
 import (
-	"gitmm/log"
-	"gitmm/util"
+	"github.com/chmodke/gitmm/log"
+	"github.com/chmodke/gitmm/util"
 	"os"
 	"runtime"
 )

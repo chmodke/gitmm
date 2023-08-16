@@ -2,9 +2,9 @@
 package cmd
 
 import (
+	"github.com/chmodke/gitmm/git"
+	"github.com/chmodke/gitmm/log"
 	"github.com/spf13/cobra"
-	"gitmm/git"
-	"gitmm/log"
 	"os"
 	"regexp"
 	"strconv"

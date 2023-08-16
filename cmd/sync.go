@@ -3,11 +3,11 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/chmodke/gitmm/config"
+	"github.com/chmodke/gitmm/git"
+	"github.com/chmodke/gitmm/log"
+	"github.com/chmodke/gitmm/util"
 	"github.com/spf13/cobra"
-	"gitmm/config"
-	"gitmm/git"
-	"gitmm/log"
-	"gitmm/util"
 	"os"
 )
 
@@ -38,7 +38,7 @@ var syncCmd = &cobra.Command{
 				process.Finish(SKIP)
 				continue
 			}
-			ok := git.GitSync(config.Upstream, config.Origin, repo, tmp, &process)
+			ok := git.Sync(config.Upstream, config.Origin, repo, tmp, &process)
 			if ok {
 				process.Finish(OK)
 			} else {

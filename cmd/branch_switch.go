@@ -9,15 +9,17 @@ import (
 	"path/filepath"
 )
 
-// pullCmd represents the pull command
-var pullCmd = &cobra.Command{
-	Use:     "pull",
-	Short:   "批量拉取仓库",
-	Long:    `执行命令会遍历work_dir目录下中的git仓库，并执行分支拉取操作。`,
-	Example: "gitmm pull -w tmp",
+// branchSwitchCmd represents the switch command
+var branchSwitchCmd = &cobra.Command{
+	Use:     "switch",
+	Short:   "批量切换分支",
+	Long:    `执行命令会遍历work_dir中的git仓库，并执行分支切换操作。`,
+	Example: "gitmm branch switch -w tmp -b develop",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		log.Printf("work_dir: %s", workDir)
+		branch, _ := cmd.Flags().GetString("branch")
+		log.Printf("branch: %s", branch)
 		force, _ := cmd.Flags().GetBool("force")
 		log.Printf("force: %t", force)
 		match, _ := cmd.Flags().GetString("match")
@@ -41,7 +43,7 @@ var pullCmd = &cobra.Command{
 				process.Finish(SKIP)
 				continue
 			}
-			ok := git.Pull(filepath.Join(localDir, repo), force, &process)
+			ok := git.SwitchBranch(filepath.Join(localDir, repo), branch, force, &process)
 			if ok {
 				process.Finish(OK)
 			} else {
@@ -52,10 +54,12 @@ var pullCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(pullCmd)
+	branchCmd.AddCommand(branchSwitchCmd)
 
-	pullCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	pullCmd.Flags().BoolP("force", "f", false, "强制拉取")
-	pullCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
-	pullCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
+	branchSwitchCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
+	branchSwitchCmd.Flags().StringP("branch", "b", "master", "目标分支/tag/commit")
+	branchSwitchCmd.MarkFlagRequired("branch")
+	branchSwitchCmd.Flags().BoolP("force", "f", false, "强制切换")
+	branchSwitchCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
+	branchSwitchCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
 }

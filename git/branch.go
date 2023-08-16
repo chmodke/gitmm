@@ -1,8 +1,12 @@
 package git
 
-import "gitmm/util"
+import (
+	"github.com/chmodke/gitmm/log"
+	"github.com/chmodke/gitmm/util"
+	"strings"
+)
 
-func GitCreateBranch(localRepo, newBranch, startPoint string, progress *util.Progress) bool {
+func CreateBranch(localRepo, newBranch, startPoint string, progress *util.Progress) bool {
 	builder := &util.CmdBuilder{}
 	builder.Add("git").Add("branch").Add(newBranch).Add(startPoint)
 	ret := util.Status(util.Execute(localRepo, builder.Build()))
@@ -11,7 +15,7 @@ func GitCreateBranch(localRepo, newBranch, startPoint string, progress *util.Pro
 	return ret
 }
 
-func GitSwitchBranch(localRepo, aimBranch string, force bool, progress *util.Progress) bool {
+func SwitchBranch(localRepo, aimBranch string, force bool, progress *util.Progress) bool {
 	builder := &util.CmdBuilder{}
 
 	ret := false
@@ -36,5 +40,35 @@ func GitSwitchBranch(localRepo, aimBranch string, force bool, progress *util.Pro
 	builder.Add("git").Add("checkout").Add(aimBranch)
 	ret = util.Status(util.Execute(localRepo, builder.Build()))
 	progress.Next()
+	return ret
+}
+
+func DeleteBranch(localRepo, branch string, force bool, progress *util.Progress) bool {
+	builder := &util.CmdBuilder{}
+	builder.Add("git").Add("branch").Add("-d")
+	if force {
+		builder.Add("-D").Add("-f")
+	}
+	builder.Add(branch)
+	ret := util.Status(util.Execute(localRepo, builder.Build()))
+	progress.Next()
+
+	return ret
+}
+
+func RenameBranch(localRepo, oldBranch, newBranch string, progress *util.Progress) bool {
+	builder := &util.CmdBuilder{}
+	builder.Add("git").Add("branch").Add("-m").Add("-M").Add(oldBranch).Add(newBranch)
+	ret := util.Status(util.Execute(localRepo, builder.Build()))
+	progress.Next()
+
+	return ret
+}
+
+func ListBranch(localRepo string) bool {
+	builder := &util.CmdBuilder{}
+	builder.Add("git").Add("branch").Add("-l").Add("--format=%(refname:lstrip=2)")
+	out, ret := util.GetOut(util.Execute(localRepo, builder.Build()))
+	log.Consoleln(strings.Split(out, "\n"))
 	return ret
 }
