@@ -11,8 +11,8 @@ else
 SOFT_VERSION:="${BUILD_VERSION}-${BUILD_DATE}"
 endif
 
-LDFLAGS:=-ldflags "-X 'github.com/chmodke/${BUILD_NAME}/cmd.VERSION=${SOFT_VERSION}'\
--X 'github.com/chmodke/${BUILD_NAME}/cmd.BuildId=${BUILD_DATE}'"
+LDFLAGS:=-ldflags "-s -w -X 'github.com/chmodke/gitmm/cmd.VERSION=${SOFT_VERSION}'\
+-X 'github.com/chmodke/gitmm/cmd.BuildId=${BUILD_DATE}'"
 
 all:clean build_win build_linux package
 
@@ -26,12 +26,20 @@ test: prepare clean
 
 build_win: prepare test
 	@echo "build win"
-	@GO111MODULE=on CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build ${LDFLAGS} -o ${BIN_DIR}/${BUILD_NAME}.exe ${SOURCE}
+	@export GO111MODULE=on \
+		&& export CGO_ENABLED=0 \
+		&& export GOOS=windows \
+		&& export GOARCH=amd64 \
+		&& go build ${LDFLAGS} -o ${BIN_DIR}/${BUILD_NAME}.exe ${SOURCE}
 	- @upx ${BIN_DIR}/${BUILD_NAME}.exe
 
 build_linux: prepare test
 	@echo "build linux"
-	@GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build ${LDFLAGS} -o ${BIN_DIR}/${BUILD_NAME} ${SOURCE}
+	@export GO111MODULE=on \
+		&& export CGO_ENABLED=0 \
+		&& export GOOS=linux \
+		&& export GOARCH=amd64 \
+		&& go build ${LDFLAGS} -o ${BIN_DIR}/${BUILD_NAME} ${SOURCE}
 	- @upx ${BIN_DIR}/${BUILD_NAME}
 
 install_win: clean prepare build_win
@@ -55,8 +63,7 @@ ifneq ($(BUILD_MODE),release)
 	@echo "currently started in snapshot mode"
 else
 	@echo "${BUILD_VERSION} will be released"
-	@git tag ${BUILD_VERSION}
-	@git push --tag
+	@git tag ${BUILD_VERSION} && git push --tag
 endif
 
 clean:
