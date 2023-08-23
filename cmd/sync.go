@@ -23,12 +23,39 @@ var syncCmd = &cobra.Command{
 		log.Printf("origin: %s", config.Origin)
 		log.Printf("repos: %s", config.Repos)
 
+		var (
+			ok      bool
+			from    string
+			fromUrl string
+			to      string
+			toUrl   string
+		)
+
+		from, _ = cmd.Flags().GetString("from")
+		log.Printf("from: %s", from)
+		to, _ = cmd.Flags().GetString("to")
+		log.Printf("to: %s", to)
+
 		match, _ := cmd.Flags().GetString("match")
 		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
 		log.Printf("invert: %s", invert)
 
-		log.Consolef("sync repo from %s to %s.", config.Upstream, config.Origin)
+		if fromUrl, ok = config.Remote[from]; !ok {
+			log.Consolef("未配置%s远端地址\n", from)
+			os.Exit(1)
+		}
+
+		if toUrl, ok = config.Remote[to]; !ok {
+			log.Consolef("未配置%s远端地址\n", to)
+			os.Exit(1)
+		}
+
+		log.Consolef("sync repo from %s[%s] to %s[%s].", from, fromUrl, to, toUrl)
+		sure := util.AreSure("Are you sure you want to continue?")
+		if !sure {
+			return
+		}
 
 		tmp := fmt.Sprintf("_%s_", util.RandCreator(8))
 		for _, repo := range config.Repos {
@@ -38,7 +65,7 @@ var syncCmd = &cobra.Command{
 				process.Finish(SKIP)
 				continue
 			}
-			ok := git.Sync(config.Upstream, config.Origin, repo, tmp, &process)
+			ok := git.Sync(fromUrl, toUrl, repo, tmp, &process)
 			if ok {
 				process.Finish(OK)
 			} else {
@@ -51,6 +78,8 @@ var syncCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(syncCmd)
+	syncCmd.Flags().StringP("from", "f", "upstream", "源端仓库地址")
+	syncCmd.Flags().StringP("to", "t", "origin", "目标端仓库地址")
 	syncCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
 	syncCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
 }
