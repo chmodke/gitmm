@@ -17,7 +17,8 @@ var batchCmd = &cobra.Command{
 	Use:     "batch",
 	Short:   "批量执行提供的git命令",
 	Long:    `执行命令会遍历work_dir中的git仓库，并执行提供的git命令。`,
-	Example: "gitmm batch -w tmp 'log --oneline -n1'",
+	Example: "gitmm batch -w tmp -- log --oneline -n1",
+	Args:    cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
 			return errors.New("请提供要执行的命令")
@@ -26,9 +27,11 @@ var batchCmd = &cobra.Command{
 		match, _ := cmd.Flags().GetString("match")
 		invert, _ := cmd.Flags().GetString("invert-match")
 
-		gitCommand := args[0]
-		gitCommand = strings.TrimLeft(gitCommand, "git ")
-		log.Printf("git command: %s", gitCommand)
+		gitCommand := args
+		if args[0] == "git" {
+			gitCommand = args[1:]
+		}
+		log.Printf("git command: %v", strings.Join(gitCommand, " "))
 
 		localDir, err := git.GetWorkDir(workDir)
 		if err != nil {

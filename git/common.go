@@ -9,9 +9,12 @@ import (
 	"strings"
 )
 
-func Command(localRepo, gitCommand string) bool {
+func Command(localRepo string, args []string) bool {
 	builder := &util.CmdBuilder{}
-	builder.Add("git").Add(gitCommand)
+	builder.Add("git")
+	for _, arg := range args {
+		builder.Add(arg)
+	}
 	out, ret := util.GetOut(util.Execute(localRepo, builder.Build()))
 	log.Consoleln(out)
 	return ret

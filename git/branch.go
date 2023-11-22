@@ -65,9 +65,12 @@ func RenameBranch(localRepo, oldBranch, newBranch string, progress *util.Progres
 	return ret
 }
 
-func ListBranch(localRepo string) bool {
+func ListBranch(localRepo string, args []string) bool {
 	builder := &util.CmdBuilder{}
 	builder.Add("git").Add("branch").Add("-l").Add("--format=%(refname:lstrip=2)")
+	for _, arg := range args {
+		builder.Add(arg)
+	}
 	out, ret := util.GetOut(util.Execute(localRepo, builder.Build()))
 	log.Consoleln(strings.Split(out, "\n"))
 	return ret

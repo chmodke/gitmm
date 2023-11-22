@@ -14,7 +14,7 @@ var branchListCmd = &cobra.Command{
 	Use:     "list",
 	Short:   "批量产看分支",
 	Long:    `执行命令会遍历work_dir中的git仓库，并执行分支产看操作。`,
-	Example: "gitmm branch list -w tmp",
+	Example: "gitmm branch list -w tmp -- -r",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		match, _ := cmd.Flags().GetString("match")
@@ -36,7 +36,7 @@ var branchListCmd = &cobra.Command{
 				continue
 			}
 			log.Consoleln(repo)
-			ok := git.ListBranch(filepath.Join(localDir, repo))
+			ok := git.ListBranch(filepath.Join(localDir, repo), args)
 			log.Consoleln("")
 			if ok {
 				result[repo] = OK
