@@ -23,11 +23,8 @@ var batchCmd = &cobra.Command{
 			return errors.New("请提供要执行的命令")
 		}
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		log.Printf("work_dir: %s", workDir)
 		match, _ := cmd.Flags().GetString("match")
-		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Printf("invert: %s", invert)
 
 		gitCommand := args[0]
 		gitCommand = strings.TrimLeft(gitCommand, "git ")

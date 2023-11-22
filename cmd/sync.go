@@ -19,9 +19,6 @@ var syncCmd = &cobra.Command{
 	Example: "gitmm sync",
 	Run: func(cmd *cobra.Command, args []string) {
 		config.LoadCfg()
-		log.Printf("upstream: %s", config.Upstream)
-		log.Printf("origin: %s", config.Origin)
-		log.Printf("repos: %s", config.Repos)
 
 		var (
 			ok      bool
@@ -32,14 +29,9 @@ var syncCmd = &cobra.Command{
 		)
 
 		from, _ = cmd.Flags().GetString("from")
-		log.Printf("from: %s", from)
 		to, _ = cmd.Flags().GetString("to")
-		log.Printf("to: %s", to)
-
 		match, _ := cmd.Flags().GetString("match")
-		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Printf("invert: %s", invert)
 
 		if fromUrl, ok = config.Remote[from]; !ok {
 			log.Consolef("未配置%s远端地址\n", from)
@@ -51,6 +43,9 @@ var syncCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		log.Printf("from: %s", fromUrl)
+		log.Printf("to: %s", toUrl)
+		log.Printf("repos: %s", config.Repos)
 		log.Consolef("sync repo from %s[%s] to %s[%s].", from, fromUrl, to, toUrl)
 		sure := util.AreSure("Are you sure you want to continue?")
 		if !sure {

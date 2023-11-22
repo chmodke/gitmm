@@ -19,15 +19,10 @@ var cloneCmd = &cobra.Command{
 		config.LoadCfg()
 
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		log.Printf("work_dir: %s", workDir)
 		workBranch, _ := cmd.Flags().GetString("branch")
-		log.Printf("branch: %s", workBranch)
 		remote, _ := cmd.Flags().GetString("remote")
-		log.Printf("remote: %s", remote)
 		match, _ := cmd.Flags().GetString("match")
-		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Printf("invert: %s", invert)
 
 		url, ok := config.Remote[remote]
 		if !ok {

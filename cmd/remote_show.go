@@ -17,11 +17,8 @@ var remoteShowCmd = &cobra.Command{
 	Example: "gitmm remote show -w tmp",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		log.Printf("work_dir: %s", workDir)
 		match, _ := cmd.Flags().GetString("match")
-		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Printf("invert: %s", invert)
 
 		localDir, err := git.GetWorkDir(workDir)
 		if err != nil {

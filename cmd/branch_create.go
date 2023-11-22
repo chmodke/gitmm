@@ -14,18 +14,14 @@ var branchCreateCmd = &cobra.Command{
 	Use:     "create",
 	Short:   "批量创建分支",
 	Long:    `执行命令会遍历work_dir中的git仓库，并执行分支创建操作。`,
-	Example: "git branch create -w tmp -b develop",
+	Example: "git branch create -w tmp develop",
+	Args:    cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		log.Printf("work_dir: %s", workDir)
-		newBranch, _ := cmd.Flags().GetString("new_branch")
-		log.Printf("new_branch: %s", newBranch)
+		newBranch := args[0]
 		startPoint, _ := cmd.Flags().GetString("refs")
-		log.Printf("refs: %s", startPoint)
 		match, _ := cmd.Flags().GetString("match")
-		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Printf("invert: %s", invert)
 
 		localDir, err := git.GetWorkDir(workDir)
 		if err != nil {
@@ -57,8 +53,6 @@ func init() {
 	branchCmd.AddCommand(branchCreateCmd)
 
 	branchCreateCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	branchCreateCmd.Flags().StringP("new_branch", "b", "master", "新分支名称")
-	branchCreateCmd.MarkFlagRequired("new_branch")
 	branchCreateCmd.Flags().StringP("refs", "r", "HEAD", "新分支起点")
 	branchCreateCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
 	branchCreateCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")

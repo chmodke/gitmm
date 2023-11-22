@@ -17,18 +17,15 @@ var remoteAddCmd = &cobra.Command{
 	Use:     "add",
 	Short:   "批量添加仓库远程信息",
 	Long:    `执行命令会遍历work_dir目录下中的git仓库，并添加仓库远程信息。`,
-	Example: "gitmm remote add -u upstream",
+	Example: "gitmm remote add upstream",
+	Args:    cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		config.LoadCfg()
 
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		log.Printf("work_dir: %s", workDir)
-		remote, _ := cmd.Flags().GetString("remote")
-		log.Printf("remote: %s", remote)
+		remote := args[0]
 		match, _ := cmd.Flags().GetString("match")
-		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Printf("invert: %s", invert)
 
 		url, ok := config.Remote[remote]
 		if !ok {
@@ -68,7 +65,6 @@ func init() {
 	remoteCmd.AddCommand(remoteAddCmd)
 
 	remoteAddCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	remoteAddCmd.Flags().StringP("remote", "u", "origin", "远程名称")
 	remoteAddCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
 	remoteAddCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
 }

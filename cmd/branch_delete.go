@@ -14,18 +14,14 @@ var branchDeleteCmd = &cobra.Command{
 	Use:     "delete",
 	Short:   "批量删除分支",
 	Long:    `执行命令会遍历work_dir中的git仓库，并执行分支删除操作。`,
-	Example: "gitmm branch delete -w tmp -b develop",
+	Example: "gitmm branch delete -w tmp develop",
+	Args:    cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		log.Printf("work_dir: %s", workDir)
-		branch, _ := cmd.Flags().GetString("branch")
-		log.Printf("branch: %s", branch)
+		branch := args[0]
 		force, _ := cmd.Flags().GetBool("force")
-		log.Printf("force: %t", force)
 		match, _ := cmd.Flags().GetString("match")
-		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Printf("invert: %s", invert)
 
 		localDir, err := git.GetWorkDir(workDir)
 		if err != nil {
@@ -57,8 +53,6 @@ func init() {
 	branchCmd.AddCommand(branchDeleteCmd)
 
 	branchDeleteCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	branchDeleteCmd.Flags().StringP("branch", "b", "master", "目标分支/tag/commit")
-	branchDeleteCmd.MarkFlagRequired("branch")
 	branchDeleteCmd.Flags().BoolP("force", "f", false, "强制删除")
 	branchDeleteCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
 	branchDeleteCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")

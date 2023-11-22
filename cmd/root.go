@@ -24,6 +24,7 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
+	log.Printf("main command: [gitmm %v]", strings.Join(os.Args[1:], " "))
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)

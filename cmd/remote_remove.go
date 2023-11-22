@@ -18,13 +18,9 @@ var remoteRemoveCmd = &cobra.Command{
 	Args:    cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		log.Printf("work_dir: %s", workDir)
 		remote := args[0]
-		log.Printf("remote: %s", remote)
 		match, _ := cmd.Flags().GetString("match")
-		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Printf("invert: %s", invert)
 
 		localDir, err := git.GetWorkDir(workDir)
 		if err != nil {
@@ -58,7 +54,6 @@ func init() {
 	remoteCmd.AddCommand(remoteRemoveCmd)
 
 	remoteRemoveCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	remoteRemoveCmd.Flags().StringP("remote", "u", "origin", "远程名称")
 	remoteRemoveCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
 	remoteRemoveCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
 }

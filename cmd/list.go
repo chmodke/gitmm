@@ -23,13 +23,8 @@ var listCmd = &cobra.Command{
 	Example: "gitmm list -w tmp",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		log.Printf("work_dir: %s", workDir)
 		match, _ := cmd.Flags().GetString("match")
-		log.Printf("match: %s", match)
 		invert, _ := cmd.Flags().GetString("invert-match")
-		log.Printf("invert: %s", invert)
-		lineNumber, _ := cmd.Flags().GetInt("line-number")
-		log.Printf("line-number: %d", lineNumber)
 
 		localDir, err := git.GetWorkDir(workDir)
 		if err != nil {
@@ -91,5 +86,4 @@ func init() {
 	listCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
 	listCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
 	listCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
-	listCmd.Flags().IntP("line-number", "n", 1, "日志行数")
 }
