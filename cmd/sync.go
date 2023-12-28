@@ -22,6 +22,7 @@ var syncCmd = &cobra.Command{
 
 		var (
 			ok      bool
+			confirm bool
 			from    string
 			fromUrl string
 			to      string
@@ -30,6 +31,7 @@ var syncCmd = &cobra.Command{
 
 		from, _ = cmd.Flags().GetString("from")
 		to, _ = cmd.Flags().GetString("to")
+		confirm, _ = cmd.Flags().GetBool("confirm")
 		match, _ := cmd.Flags().GetString("match")
 		invert, _ := cmd.Flags().GetString("invert-match")
 
@@ -47,8 +49,7 @@ var syncCmd = &cobra.Command{
 		log.Printf("to: %s", toUrl)
 		log.Printf("repos: %s", config.Repos)
 		log.Consolef("sync repo from %s[%s] to %s[%s].", from, fromUrl, to, toUrl)
-		sure := util.AreSure("Are you sure you want to continue?")
-		if !sure {
+		if !confirm && !util.AreSure("Are you sure you want to continue?") {
 			return
 		}
 
@@ -75,6 +76,7 @@ func init() {
 	rootCmd.AddCommand(syncCmd)
 	syncCmd.Flags().StringP("from", "f", "upstream", "源端仓库地址")
 	syncCmd.Flags().StringP("to", "t", "origin", "目标端仓库地址")
+	syncCmd.Flags().BoolP("confirm", "c", false, "确认同步")
 	syncCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
 	syncCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
 }
