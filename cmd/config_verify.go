@@ -15,7 +15,7 @@ var verifyCmd = &cobra.Command{
 	Use:     "verify",
 	Short:   "校验配置文件",
 	Long:    `校验配置文件`,
-	Example: "gitmm config verify",
+	Example: "gitmm config verify\n校验在当前目录下repo.yaml文件格式是否正确",
 	Run: func(cmd *cobra.Command, args []string) {
 		config.LoadCfg()
 		log.Consolef("upstream: %s", config.Upstream)

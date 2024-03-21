@@ -8,8 +8,8 @@ import (
 // branchCmd represents the branch command
 var branchCmd = &cobra.Command{
 	Use:   "branch",
-	Short: "分支操作",
-	Long:  `分支操作`,
+	Short: "批量分支操作",
+	Long:  `批量分支操作`,
 }
 
 func init() {

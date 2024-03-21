@@ -13,8 +13,8 @@ import (
 var cloneCmd = &cobra.Command{
 	Use:     "clone",
 	Short:   "批量克隆仓库",
-	Long:    "执行命令会读取当前目录下repo.yaml配置文件，遍历repos配置项，从origin克隆代码到当前目录下work_dir指定的文件夹中。",
-	Example: "gitmm clone -w tmp -b master",
+	Long:    "执行命令读取当前目录下repo.yaml配置文件，遍历repos配置项，从origin克隆代码到当前目录下work_dir指定的文件夹中。",
+	Example: "gitmm clone -w tmp -b master\n将所有仓库的master分支克隆到tmp工作目录下",
 	Run: func(cmd *cobra.Command, args []string) {
 		config.LoadCfg()
 
@@ -53,9 +53,9 @@ var cloneCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(cloneCmd)
 
-	cloneCmd.Flags().StringP("work_dir", "w", "master", "克隆代码的存放路径")
-	cloneCmd.Flags().StringP("branch", "b", "master", "克隆代码的分支")
-	cloneCmd.Flags().StringP("remote", "u", "origin", "克隆代码的远程名称")
-	cloneCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
-	cloneCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
+	cloneCmd.Flags().StringP("work_dir", "w", "master", "可选，克隆代码的存放路径")
+	cloneCmd.Flags().StringP("branch", "b", "master", "可选，克隆代码的分支")
+	cloneCmd.Flags().StringP("remote", "u", "origin", "可选，克隆代码的远程名称")
+	cloneCmd.Flags().StringP("match", "m", "", "可选，仓库过滤条件，golang正则表达式")
+	cloneCmd.Flags().StringP("invert-match", "i", "", "可选，仓库反向过滤条件，golang正则表达式")
 }

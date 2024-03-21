@@ -13,8 +13,8 @@ import (
 var fetchCmd = &cobra.Command{
 	Use:     "fetch",
 	Short:   "批量拉取仓库",
-	Long:    `执行命令会遍历work_dir目录下中的git仓库，并执行分支拉取操作。`,
-	Example: "gitmm fetch -w tmp -b master -u upstream",
+	Long:    `执行命令遍历work_dir目录下中的git仓库，并执行分支拉取操作。`,
+	Example: "gitmm fetch -b master -u upstream\n从upstream拉取当前工作目录下所有仓库的master分支",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		branch, _ := cmd.Flags().GetString("branch")
@@ -51,9 +51,9 @@ var fetchCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(fetchCmd)
 
-	fetchCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	fetchCmd.Flags().StringP("remote", "u", "origin", "上游")
-	fetchCmd.Flags().StringP("branch", "b", "master", "分支")
-	fetchCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
-	fetchCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
+	fetchCmd.Flags().StringP("work_dir", "w", ".", "可选，本地代码的存放路径")
+	fetchCmd.Flags().StringP("remote", "u", "origin", "可选，上游")
+	fetchCmd.Flags().StringP("branch", "b", "master", "可选，分支")
+	fetchCmd.Flags().StringP("match", "m", "", "可选，仓库过滤条件，golang正则表达式")
+	fetchCmd.Flags().StringP("invert-match", "i", "", "可选，仓库反向过滤条件，golang正则表达式")
 }

@@ -11,10 +11,10 @@ import (
 
 // branchListCmd represents the delete command
 var branchListCmd = &cobra.Command{
-	Use:     "list",
-	Short:   "批量产看分支",
-	Long:    `执行命令会遍历work_dir中的git仓库，并执行分支产看操作。`,
-	Example: "gitmm branch list -w tmp -- -r",
+	Use:     "list [flags] -- <git_option>",
+	Short:   "批量查看分支",
+	Long:    `执行命令遍历work_dir中的git仓库，并执行分支查看操作。`,
+	Example: "gitmm branch list -- -r\n查看当前工作目录下所有仓库的分支列表",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		match, _ := cmd.Flags().GetString("match")
@@ -51,7 +51,7 @@ var branchListCmd = &cobra.Command{
 func init() {
 	branchCmd.AddCommand(branchListCmd)
 
-	branchListCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	branchListCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
-	branchListCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
+	branchListCmd.Flags().StringP("work_dir", "w", ".", "可选，本地代码的存放路径")
+	branchListCmd.Flags().StringP("match", "m", "", "可选，仓库过滤条件，golang正则表达式")
+	branchListCmd.Flags().StringP("invert-match", "i", "", "可选，仓库反向过滤条件，golang正则表达式")
 }

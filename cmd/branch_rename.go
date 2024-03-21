@@ -11,10 +11,10 @@ import (
 
 // branchRenameCmd represents the switch command
 var branchRenameCmd = &cobra.Command{
-	Use:     "rename",
+	Use:     "rename [flags] old_branch new_branch",
 	Short:   "批量重命名分支",
-	Long:    `执行命令会遍历work_dir中的git仓库，并执行分支重命名操作。`,
-	Example: "gitmm branch rename -w tmp develop master",
+	Long:    `执行命令遍历work_dir中的git仓库，并执行分支重命名操作。`,
+	Example: "gitmm branch rename develop master\n将当前工作目录下所有仓库的develop分支重命名master分支",
 	Args:    cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
@@ -52,7 +52,7 @@ var branchRenameCmd = &cobra.Command{
 func init() {
 	branchCmd.AddCommand(branchRenameCmd)
 
-	branchRenameCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	branchRenameCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
-	branchRenameCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
+	branchRenameCmd.Flags().StringP("work_dir", "w", ".", "可选，本地代码的存放路径")
+	branchRenameCmd.Flags().StringP("match", "m", "", "可选，仓库过滤条件，golang正则表达式")
+	branchRenameCmd.Flags().StringP("invert-match", "i", "", "可选，仓库反向过滤条件，golang正则表达式")
 }

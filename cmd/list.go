@@ -19,8 +19,8 @@ import (
 var listCmd = &cobra.Command{
 	Use:     "list",
 	Short:   "展示工作路径下的Git仓库信息",
-	Long:    `执行命令会遍历work_dir中的git仓库，并展示基础信息。`,
-	Example: "gitmm list -w tmp",
+	Long:    `执行命令遍历work_dir中的git仓库，并展示基础信息。`,
+	Example: "gitmm list\n展示当前工作目录下的Git仓库信息概览",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		match, _ := cmd.Flags().GetString("match")
@@ -83,7 +83,7 @@ func printStatus(repo, branchName, branchTrack, lastCommit string, status map[st
 func init() {
 	rootCmd.AddCommand(listCmd)
 
-	listCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	listCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
-	listCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
+	listCmd.Flags().StringP("work_dir", "w", ".", "可选，本地代码的存放路径")
+	listCmd.Flags().StringP("match", "m", "", "可选，仓库过滤条件，golang正则表达式")
+	listCmd.Flags().StringP("invert-match", "i", "", "可选，仓库反向过滤条件，golang正则表达式")
 }

@@ -11,10 +11,10 @@ import (
 
 // branchSwitchCmd represents the switch command
 var branchSwitchCmd = &cobra.Command{
-	Use:     "switch",
+	Use:     "switch [flags] branch_name",
 	Short:   "批量切换分支",
-	Long:    `执行命令会遍历work_dir中的git仓库，并执行分支切换操作。`,
-	Example: "gitmm branch switch -w tmp develop",
+	Long:    `执行命令遍历work_dir中的git仓库，并执行分支切换操作。`,
+	Example: "gitmm branch switch develop\n将当前工作目录下所有仓库切换到develop分支",
 	Args:    cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
@@ -52,8 +52,8 @@ var branchSwitchCmd = &cobra.Command{
 func init() {
 	branchCmd.AddCommand(branchSwitchCmd)
 
-	branchSwitchCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	branchSwitchCmd.Flags().BoolP("force", "f", false, "强制切换")
-	branchSwitchCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
-	branchSwitchCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
+	branchSwitchCmd.Flags().StringP("work_dir", "w", ".", "可选，本地代码的存放路径")
+	branchSwitchCmd.Flags().BoolP("force", "f", false, "可选，强制切换")
+	branchSwitchCmd.Flags().StringP("match", "m", "", "可选，仓库过滤条件，golang正则表达式")
+	branchSwitchCmd.Flags().StringP("invert-match", "i", "", "可选，仓库反向过滤条件，golang正则表达式")
 }

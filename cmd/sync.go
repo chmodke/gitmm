@@ -16,7 +16,7 @@ var syncCmd = &cobra.Command{
 	Short: "批量同步主从仓库",
 	Long: `执行命令会读取当前目录下repo.yaml配置文件，遍历repos配置项，从upstream强制同步全部内容到origin中，需要用户对origin有强制写权限（取消分支保护）。
 注意：会强制以upstream中的内容覆盖origin中的内容。`,
-	Example: "gitmm sync",
+	Example: "gitmm sync\n从upstream同步全部内容到origin中",
 	Run: func(cmd *cobra.Command, args []string) {
 		config.LoadCfg()
 
@@ -74,9 +74,9 @@ var syncCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(syncCmd)
-	syncCmd.Flags().StringP("from", "f", "upstream", "源端仓库地址")
-	syncCmd.Flags().StringP("to", "t", "origin", "目标端仓库地址")
-	syncCmd.Flags().BoolP("confirm", "c", false, "确认同步")
-	syncCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
-	syncCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
+	syncCmd.Flags().StringP("from", "f", "upstream", "可选，源端仓库地址")
+	syncCmd.Flags().StringP("to", "t", "origin", "可选，目标端仓库地址")
+	syncCmd.Flags().BoolP("confirm", "c", false, "可选，确认同步")
+	syncCmd.Flags().StringP("match", "m", "", "可选，仓库过滤条件，golang正则表达式")
+	syncCmd.Flags().StringP("invert-match", "i", "", "可选，仓库反向过滤条件，golang正则表达式")
 }

@@ -13,8 +13,8 @@ import (
 var remoteShowCmd = &cobra.Command{
 	Use:     "show",
 	Short:   "批量查看仓库远程信息",
-	Long:    `执行命令会遍历work_dir目录下中的git仓库，并查看仓库远程信息。`,
-	Example: "gitmm remote show -w tmp",
+	Long:    `执行命令遍历work_dir目录下中的git仓库，并查看仓库远程信息。`,
+	Example: "gitmm remote show\n查看当前工作目录下所有仓库的远程信息",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		match, _ := cmd.Flags().GetString("match")
@@ -51,7 +51,7 @@ var remoteShowCmd = &cobra.Command{
 func init() {
 	remoteCmd.AddCommand(remoteShowCmd)
 
-	remoteShowCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	remoteShowCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
-	remoteShowCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
+	remoteShowCmd.Flags().StringP("work_dir", "w", ".", "可选，本地代码的存放路径")
+	remoteShowCmd.Flags().StringP("match", "m", "", "可选，仓库过滤条件，golang正则表达式")
+	remoteShowCmd.Flags().StringP("invert-match", "i", "", "可选，仓库反向过滤条件，golang正则表达式")
 }

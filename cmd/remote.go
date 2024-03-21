@@ -8,8 +8,8 @@ import (
 // remoteCmd represents the branch command
 var remoteCmd = &cobra.Command{
 	Use:   "remote",
-	Short: "远程地址管理",
-	Long:  `远程地址管理`,
+	Short: "批量远程地址管理",
+	Long:  `批量远程地址管理`,
 }
 
 func init() {

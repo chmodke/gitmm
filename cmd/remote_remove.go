@@ -11,10 +11,10 @@ import (
 
 // remoteRemoveCmd represents the remote command
 var remoteRemoveCmd = &cobra.Command{
-	Use:     "remove",
-	Short:   "批量删除仓库远程信息",
-	Long:    `执行命令会遍历work_dir目录下中的git仓库，并删除仓库远程信息。`,
-	Example: "gitmm remote remove upstream",
+	Use:     "remove [flags] remote_name",
+	Short:   "批量移除仓库远程信息",
+	Long:    `执行命令遍历work_dir目录下中的git仓库，并移除仓库远程信息。`,
+	Example: "gitmm remote remove upstream\n移除当前工作目录下所有仓库的upstream远程信息",
 	Args:    cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
@@ -53,7 +53,7 @@ var remoteRemoveCmd = &cobra.Command{
 func init() {
 	remoteCmd.AddCommand(remoteRemoveCmd)
 
-	remoteRemoveCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	remoteRemoveCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
-	remoteRemoveCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
+	remoteRemoveCmd.Flags().StringP("work_dir", "w", ".", "可选，本地代码的存放路径")
+	remoteRemoveCmd.Flags().StringP("match", "m", "", "可选，仓库过滤条件，golang正则表达式")
+	remoteRemoveCmd.Flags().StringP("invert-match", "i", "", "可选，仓库反向过滤条件，golang正则表达式")
 }

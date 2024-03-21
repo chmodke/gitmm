@@ -13,8 +13,8 @@ import (
 var pullCmd = &cobra.Command{
 	Use:     "pull",
 	Short:   "批量拉取仓库",
-	Long:    `执行命令会遍历work_dir目录下中的git仓库，并执行分支拉取操作。`,
-	Example: "gitmm pull -w tmp",
+	Long:    `执行命令遍历work_dir目录下中的git仓库，并执行分支拉取操作。`,
+	Example: "gitmm pull\n拉取当前工作目录下所有仓库的最新代码",
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
 		force, _ := cmd.Flags().GetBool("force")
@@ -50,8 +50,8 @@ var pullCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(pullCmd)
 
-	pullCmd.Flags().StringP("work_dir", "w", ".", "本地代码的存放路径")
-	pullCmd.Flags().BoolP("force", "f", false, "强制拉取")
-	pullCmd.Flags().StringP("match", "m", "", "仓库过滤条件，golang正则表达式")
-	pullCmd.Flags().StringP("invert-match", "i", "", "仓库反向过滤条件，golang正则表达式")
+	pullCmd.Flags().StringP("work_dir", "w", ".", "可选，本地代码的存放路径")
+	pullCmd.Flags().BoolP("force", "f", false, "可选，强制拉取")
+	pullCmd.Flags().StringP("match", "m", "", "可选，仓库过滤条件，golang正则表达式")
+	pullCmd.Flags().StringP("invert-match", "i", "", "可选，仓库反向过滤条件，golang正则表达式")
 }
