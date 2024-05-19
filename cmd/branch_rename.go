@@ -7,6 +7,7 @@ import (
 	"github.com/chmodke/gitmm/util"
 	"github.com/spf13/cobra"
 	"path/filepath"
+	"strings"
 )
 
 // branchRenameCmd represents the switch command
@@ -18,7 +19,7 @@ var branchRenameCmd = &cobra.Command{
 	Args:    cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		workDir, _ := cmd.Flags().GetString("work_dir")
-		branch := args[0]
+		branches := args[0]
 		match, _ := cmd.Flags().GetString("match")
 		invert, _ := cmd.Flags().GetString("invert-match")
 		newBranch := args[1]
@@ -39,7 +40,13 @@ var branchRenameCmd = &cobra.Command{
 				process.Finish(SKIP)
 				continue
 			}
-			ok := git.RenameBranch(filepath.Join(localDir, repo), branch, newBranch, &process)
+			ok := true
+			for _, branch := range strings.Split(branches, ",") {
+				ok = git.RenameBranch(filepath.Join(localDir, repo), branch, newBranch, &process)
+				if ok {
+					break
+				}
+			}
 			if ok {
 				process.Finish(OK)
 			} else {

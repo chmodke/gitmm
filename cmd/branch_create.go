@@ -7,6 +7,7 @@ import (
 	"github.com/chmodke/gitmm/util"
 	"github.com/spf13/cobra"
 	"path/filepath"
+	"strings"
 )
 
 // branchCreateCmd represents the create command
@@ -39,7 +40,13 @@ var branchCreateCmd = &cobra.Command{
 				process.Finish(SKIP)
 				continue
 			}
-			ok := git.CreateBranch(filepath.Join(localDir, repo), newBranch, startPoint, &process)
+			ok := true
+			for _, ref := range strings.Split(startPoint, ",") {
+				ok = git.CreateBranch(filepath.Join(localDir, repo), newBranch, ref, &process)
+				if ok {
+					break
+				}
+			}
 			if ok {
 				process.Finish(OK)
 			} else {
